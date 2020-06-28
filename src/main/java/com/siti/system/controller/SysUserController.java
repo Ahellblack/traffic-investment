@@ -15,7 +15,7 @@ import com.siti.common.vo.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import com.siti.common.Result;
-import com.siti.common.mapper.ISysBaseAPI;
+import com.siti.system.service.ISysBaseAPI;
 import com.siti.utils.PasswordUtil;
 import com.siti.utils.RedisUtil;
 import com.siti.utils.oConvertUtils;
@@ -32,7 +32,6 @@ import com.siti.system.service.ISysUserService;
 import com.siti.system.vo.SysDepartUsersVO;
 import com.siti.system.vo.SysUserRoleVO;
 import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

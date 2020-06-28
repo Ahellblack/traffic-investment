@@ -5,11 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.siti.common.mapper.ISysBaseAPI;
+import com.siti.system.service.ISysBaseAPI;
 import com.siti.system.entity.SysLog;
 import com.siti.system.mapper.SysLogMapper;
 import com.siti.system.service.ISysLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

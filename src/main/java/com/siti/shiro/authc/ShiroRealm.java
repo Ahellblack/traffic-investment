@@ -1,6 +1,6 @@
 package com.siti.shiro.authc;
 
-import com.siti.common.mapper.ISysBaseAPI;
+import com.siti.system.service.ISysBaseAPI;
 import com.siti.common.constant.CommonConstant;
 import com.siti.common.vo.LoginUser;
 import com.siti.system.service.ISysUserService;
@@ -17,7 +17,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 

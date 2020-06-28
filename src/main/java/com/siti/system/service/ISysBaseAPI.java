@@ -1,7 +1,9 @@
-package com.siti.common.mapper;
+package com.siti.system.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.siti.common.vo.*;
+import com.siti.system.entity.SysLog;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +17,6 @@ import java.util.Map;
  * @Date:2019-4-20 
  * @Version:V1.0
  */
-@Service
 public interface ISysBaseAPI {
 
 	/**

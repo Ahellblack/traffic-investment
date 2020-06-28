@@ -2,7 +2,7 @@ package com.siti.common.query;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.siti.common.mapper.ISysBaseAPI;
+import com.siti.system.service.ISysBaseAPI;
 import com.siti.common.constant.CommonConstant;
 import com.siti.common.constant.DataBaseConstant;
 import com.siti.common.vo.SysPermissionDataRuleModel;

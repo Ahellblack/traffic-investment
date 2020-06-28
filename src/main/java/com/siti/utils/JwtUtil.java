@@ -57,6 +57,21 @@ public class JwtUtil {
 	}
 
 	/**
+	 * 根据request中的token获取用户账号
+	 *
+	 * @param request
+	 * @return
+	 */
+	public static String getUserNameByToken(HttpServletRequest request) {
+		String accessToken = request.getHeader("X-Access-Token");
+		String username = getUsername(accessToken);
+		if (oConvertUtils.isEmpty(username)) {
+			return  "";
+		}
+		return username;
+	}
+
+	/**
 	 * 生成签名,5min后过期
 	 *
 	 * @param username 用户名

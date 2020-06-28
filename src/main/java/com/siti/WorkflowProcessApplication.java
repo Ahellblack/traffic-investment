@@ -17,15 +17,15 @@ import java.net.UnknownHostException;
 @SpringBootApplication
 @EnableScheduling
 @EnableTransactionManagement
-@MapperScan("com.siti.supervisionapp.*.mapper")
+@MapperScan("com.siti.*.mapper")
 @ServletComponentScan
 @EnableAutoConfiguration
 @Slf4j
-public class TrafficInvestmentApplication extends SpringBootServletInitializer {
+public class WorkflowProcessApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws UnknownHostException {
 
-		ConfigurableApplicationContext application = SpringApplication.run(TrafficInvestmentApplication.class, args);
+		ConfigurableApplicationContext application = SpringApplication.run(WorkflowProcessApplication.class, args);
 		Environment env = application.getEnvironment();
 		String ip = InetAddress.getLocalHost().getHostAddress();
 		String port = env.getProperty("server.port");

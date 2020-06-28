@@ -1,5 +1,7 @@
 package com.siti.system.controller;
 
+
+
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.siti.common.EncryptedString;
@@ -12,7 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import com.siti.common.Result;
-import com.siti.common.mapper.ISysBaseAPI;
+import com.siti.system.service.ISysBaseAPI;
 import com.siti.utils.*;
 import com.siti.system.entity.SysDepart;
 import com.siti.system.entity.SysUser;
@@ -21,7 +23,7 @@ import com.siti.system.service.ISysDepartService;
 import com.siti.system.service.ISysLogService;
 import com.siti.system.service.ISysUserService;
 import com.siti.system.util.RandImageUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -63,7 +65,8 @@ public class LoginController {
 		//update-begin--Author:scott  Date:20190805 for：暂时注释掉密码加密逻辑，有点问题
 
 		//update-begin-author:taoyan date:20190828 for:校验验证码
-        String captcha = sysLoginModel.getCaptcha();
+       //以redis记录验证码
+		/* String captcha = sysLoginModel.getCaptcha();
         if(captcha==null){
             result.error500("验证码无效");
             return result;
@@ -74,7 +77,7 @@ public class LoginController {
 		if(checkCode==null || !checkCode.equals(lowerCaseCaptcha)) {
 			result.error500("验证码错误");
 			return result;
-		}
+		}*/
 		//update-end-author:taoyan date:20190828 for:校验验证码
 		
 		//1. 校验用户是否有效
@@ -83,7 +86,7 @@ public class LoginController {
 		if(!result.isSuccess()) {
 			return result;
 		}
-		
+
 		//2. 校验用户名或密码是否正确
 		String userpassword = PasswordUtil.encrypt(username, password, sysUser.getSalt());
 		String syspassword = sysUser.getPassword();
