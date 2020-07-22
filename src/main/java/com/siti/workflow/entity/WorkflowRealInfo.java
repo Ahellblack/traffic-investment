@@ -34,8 +34,8 @@ public class WorkflowRealInfo {
   private java.sql.Timestamp finalTime;
   @ApiModelProperty(value = "实际完成时间")
   private java.sql.Timestamp finishTime;
-  @ApiModelProperty(value = "主键")
+  @ApiModelProperty(value = "任务负责人id")
   private long approvalUserId;
-  @ApiModelProperty(value = "主键")
+  @ApiModelProperty(value = "任务负责人名称")
   private String approvalUserName;
 }

@@ -130,6 +130,11 @@ public class ShiroConfig {
 		//大屏设计器排除
 		filterChainDefinitionMap.put("/big/screen/**", "anon");
 
+		//微信扫码登录
+		filterChainDefinitionMap.put("/wxLogin", "anon");
+
+
+
 		// 添加自己的过滤器并且取名为jwt
 		Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
 		filterMap.put("jwt", new JwtFilter());

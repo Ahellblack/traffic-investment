@@ -18,6 +18,16 @@ public class Workflow {
   private String workflowName;
   @ApiModelProperty(value = "流程描述")
   private String workflowDesc;
+  @ApiModelProperty(value = "版本")
+  private String version;
+  @ApiModelProperty(value = "创建时间")
+  private String create_time;
+  @ApiModelProperty(value = "创建人")
+  private String create_by;
+  @ApiModelProperty(value = "更新时间")
+  private String update_time;
+  @ApiModelProperty(value = "更新人")
+  private String update_by;
 
 
 }
