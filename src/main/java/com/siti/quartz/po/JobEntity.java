@@ -1,19 +1,13 @@
 package com.siti.quartz.po;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
 import java.io.Serializable;
 
 /**
  * Created by quyue1205 on 2019/1/22.
  * 这里个人示例,可自定义相关属性
  */
-@Table(name = "job_entity")
 public class JobEntity implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;          //job名称
     private String group;         //job组名

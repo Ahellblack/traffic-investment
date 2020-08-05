@@ -14,14 +14,17 @@ public class WorkflowRealInfo {
 
   @ApiModelProperty(value = "主键")
   private long id;
+
+  @ApiModelProperty(value = "流程单号")
+  private String sheetCode;
   @ApiModelProperty(value = "项目工程号")
   private String constructionCode;
   @ApiModelProperty(value = "项目工程名")
   private String constructionName;
   @ApiModelProperty(value = "流程号")
-  private long workflowCode;
+  private String workflowCode;
   @ApiModelProperty(value = "流程节点号")
-  private long workflowNodeCode;
+  private String NodeCode;
   @ApiModelProperty(value = "流程状态")
   private String workflowStatus;
   @ApiModelProperty(value = "节点描述")

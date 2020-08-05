@@ -14,16 +14,15 @@ management:
   web:
    exposure:
     include: metrics,httptrace
-
 spring:
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
   datasource:
-    url: jdbc:mysql://10.1.30.210:3306/traffic_invest?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
-    username: dev
-    password: ITScai@210
+    url: jdbc:mysql://localhost:3306/traffic_invest?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
+    username: root
+    password: 123
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       stat-view-servlet:

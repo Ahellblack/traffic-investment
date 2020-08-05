@@ -1,10 +1,8 @@
 package com.siti.workflow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.siti.workflow.entity.Workflow;
 import com.siti.workflow.entity.WorkflowNode;
 import com.siti.workflow.vo.WorkflowNodeVo;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,5 +17,10 @@ public interface IWorkflowNodeService extends IService<WorkflowNode> {
      *
      * */
     List<WorkflowNodeVo> allWorkflowNodeConfig(String workflowCode);
+
+    /**
+     * 创建实体流程
+     * */
+    boolean createRealWorkflow(List<WorkflowNodeVo> workflowNodeVos,String constructionCode);
 
 }

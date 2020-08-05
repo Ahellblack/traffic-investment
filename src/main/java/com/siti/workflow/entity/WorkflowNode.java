@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 public class WorkflowNode {
 
   @ApiModelProperty(value = "主键")
-  private long id;
+  private String nodeCode;
   @ApiModelProperty(value = "流程号")
-  private long workflowCode;
+  private String workflowCode;
   @ApiModelProperty(value = "结点名称")
   private String workflowNodeCode;
   @ApiModelProperty(value = "节点等级")
@@ -34,6 +34,14 @@ public class WorkflowNode {
   private long approvalMethod;
   @ApiModelProperty(value = "关联表")
   private String relatTable;
+  @ApiModelProperty(value = "进入节点时间")
+  private String insideTime;
+  @ApiModelProperty(value = "配置的初始时间")
+  private String initialTime;
+  @ApiModelProperty(value = "配置的结束时间")
+  private String finalTime;
+  @ApiModelProperty(value = "实际完成时间")
+  private String finishTime;
 
 
 

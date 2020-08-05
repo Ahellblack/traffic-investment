@@ -12,20 +12,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WorkflowTask {
 
-  @ApiModelProperty(value = "主键")
-  private long id;
-  @ApiModelProperty(value = "主键")
-  private String taskCode;
-  @ApiModelProperty(value = "主键")
-  private String taskName;
-  @ApiModelProperty(value = "主键")
-  private String taskDesc;
-  @ApiModelProperty(value = "主键")
-  private long workflowCode;
-  @ApiModelProperty(value = "主键")
-  private String workflowNodeCode;
-  @ApiModelProperty(value = "主键")
-  private long isNecessary;
+    @ApiModelProperty(value = "主键")
+    private long id;
+    @ApiModelProperty(value = "任务点")
+    private String taskCode;
+    @ApiModelProperty(value = "任务名")
+    private String taskName;
+    @ApiModelProperty(value = "任务描述")
+    private String taskDesc;
+    @ApiModelProperty(value = "流程号")
+    private String workflowCode;
+    @ApiModelProperty(value = "节点号")
+    private String nodeCode;
+    @ApiModelProperty(value = "是否需要上传文件")
+    private long needFiles;
+    @ApiModelProperty(value = "是否有衍生流程")
+    private long haveRamification;
+    @ApiModelProperty(value = "衍生流程号")
+    private long ramificWorkflowId;
 
 
 }

@@ -1,9 +1,9 @@
 package com.siti.shiro.authc;
 
-import com.siti.system.service.ISysBaseAPI;
+import com.siti.system.login.service.ISysBaseAPI;
 import com.siti.common.constant.CommonConstant;
 import com.siti.common.vo.LoginUser;
-import com.siti.system.service.ISysUserService;
+import com.siti.system.login.service.ISysUserService;
 import com.siti.utils.JwtUtil;
 import com.siti.utils.RedisUtil;
 import com.siti.utils.SpringContextUtils;

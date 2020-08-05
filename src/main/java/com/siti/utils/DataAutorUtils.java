@@ -1,7 +1,7 @@
 package com.siti.utils;
 
 import com.siti.common.vo.SysPermissionDataRuleModel;
-import com.siti.system.vo.SysUserCacheInfo;
+import com.siti.system.login.vo.SysUserCacheInfo;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Workflow {
 
   @ApiModelProperty(value = "主键,流程号")
-  private long workflowCode;
+  private String workflowCode;
   @ApiModelProperty(value = "流程名称")
   private String workflowName;
   @ApiModelProperty(value = "流程描述")
