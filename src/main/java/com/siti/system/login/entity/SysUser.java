@@ -1,14 +1,16 @@
 package com.siti.system.login.entity;
 
-import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import org.springframework.format.annotation.DateTimeFormat;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -28,8 +30,9 @@ public class SysUser implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.ID_WORKER_STR)
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     /**
      * 登录账号

@@ -17,9 +17,9 @@ public class WorkflowRealTaskProgress {
   @ApiModelProperty(value = "项目工程编号")
   private String constructionCode;
   @ApiModelProperty(value = "流程编号")
-  private long workflowCode;
+  private String workflowCode;
   @ApiModelProperty(value = "流程节点编号")
-  private long workflowNodeCode;
+  private String NodeCode;
   @ApiModelProperty(value = "任务号")
   private String taskCode;
   @ApiModelProperty(value = "任务名称")
@@ -30,6 +30,8 @@ public class WorkflowRealTaskProgress {
   private java.sql.Timestamp initialTime;
   @ApiModelProperty(value = "最后截止时间")
   private java.sql.Timestamp finalTime;
+  @ApiModelProperty(value = "任务实际完成时间")
+  private java.sql.Timestamp insideTime;
   @ApiModelProperty(value = "实际完成时间")
   private java.sql.Timestamp finishTime;
   @ApiModelProperty(value = "任务完成人")

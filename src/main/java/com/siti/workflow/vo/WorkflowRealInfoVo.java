@@ -1,10 +1,13 @@
 package com.siti.workflow.vo;
 
+import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -41,4 +44,6 @@ public class WorkflowRealInfoVo {
   private long approvalUserId;
   @ApiModelProperty(value = "任务负责人名称")
   private String approvalUserName;
+
+  private List<WorkflowRealTaskProgress> taskProgressList;
 }

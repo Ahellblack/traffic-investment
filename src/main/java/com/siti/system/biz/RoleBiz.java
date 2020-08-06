@@ -29,7 +29,7 @@ public class RoleBiz extends BaseBiz<RoleMapper,Role>{
 	}
 	
 	/**保存角色,并同时保存角色与权限关系
-	 * @param authIds 可为null
+	 * @param authoIds 可为null
 	 * */
 	public Role save(Role role, Integer[] authoIds){
 		dao.insert(role);

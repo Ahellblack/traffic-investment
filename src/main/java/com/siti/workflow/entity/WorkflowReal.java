@@ -21,9 +21,9 @@ public class WorkflowReal {
     private String workflowDesc;
     private String version;
     private String createTime;
-    private String createBy;
+    private Integer createBy;
     private String updateTime;
-    private String updateBy;
+    private Integer updateBy;
     private String constructionCode;
     private String constructionName;
 

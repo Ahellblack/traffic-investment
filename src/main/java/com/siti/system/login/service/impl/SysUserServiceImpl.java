@@ -113,7 +113,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if(oConvertUtils.isNotEmpty(roles)) {
 			String[] arr = roles.split(",");
 			for (String roleId : arr) {
-				SysUserRole userRole = new SysUserRole(user.getId(), roleId);
+				SysUserRole userRole = new SysUserRole(user.getId()+"", roleId);
 				sysUserRoleMapper.insert(userRole);
 			}
 		}
@@ -129,7 +129,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if(oConvertUtils.isNotEmpty(roles)) {
 			String[] arr = roles.split(",");
 			for (String roleId : arr) {
-				SysUserRole userRole = new SysUserRole(user.getId(), roleId);
+				SysUserRole userRole = new SysUserRole(user.getId()+"", roleId);
 				sysUserRoleMapper.insert(userRole);
 			}
 		}
@@ -292,7 +292,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if(oConvertUtils.isNotEmpty(selectedParts)) {
 			String[] arr = selectedParts.split(",");
 			for (String deaprtId : arr) {
-				SysUserDepart userDeaprt = new SysUserDepart(user.getId(), deaprtId);
+				SysUserDepart userDeaprt = new SysUserDepart(user.getId()+"", deaprtId);
 				sysUserDepartMapper.insert(userDeaprt);
 			}
 		}
@@ -309,7 +309,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		if(oConvertUtils.isNotEmpty(departs)) {
 			String[] arr = departs.split(",");
 			for (String departId : arr) {
-				SysUserDepart userDepart = new SysUserDepart(user.getId(), departId);
+				SysUserDepart userDepart = new SysUserDepart(user.getId()+"", departId);
 				sysUserDepartMapper.insert(userDepart);
 			}
 		}

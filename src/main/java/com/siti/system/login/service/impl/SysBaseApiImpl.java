@@ -219,7 +219,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 				}
 				SysAnnouncementSend announcementSend = new SysAnnouncementSend();
 				announcementSend.setAnntId(anntId);
-				announcementSend.setUserId(sysUser.getId());
+				announcementSend.setUserId(sysUser.getId()+"");
 				announcementSend.setReadFlag(CommonConstant.NO_READ_FLAG);
 				sysAnnouncementSendMapper.insert(announcementSend);
 				JSONObject obj = new JSONObject();
@@ -227,7 +227,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		    	obj.put("userId", sysUser.getId());
 				obj.put("msgId", announcement.getId());
 				obj.put("msgTxt", announcement.getTitile());
-		    	//webSocket.sendOneMessage(sysUser.getId(), obj.toJSONString());
+		    	//webSocket.sendOneMessage(sysUser.getId()+"", obj.toJSONString());
 			}
 		}
 
@@ -244,7 +244,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		SysAnnouncement announcement = sysAnnouncementMapper.selectOne(new QueryWrapper<SysAnnouncement>().eq("bus_type",busType).eq("bus_id",busId));
 		if(announcement != null){
 			LoginUser sysUser = (LoginUser)SecurityUtils.getSubject().getPrincipal();
-			String userId = sysUser.getId();
+			String userId = sysUser.getId()+"";
 			LambdaUpdateWrapper<SysAnnouncementSend> updateWrapper = new UpdateWrapper().lambda();
 			updateWrapper.set(SysAnnouncementSend::getReadFlag, CommonConstant.HAS_READ_FLAG);
 			updateWrapper.set(SysAnnouncementSend::getReadTime, new Date());
@@ -324,7 +324,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 		for(SysUser user : userList){
 			ComboModel model = new ComboModel();
 			model.setTitle(user.getRealname());
-			model.setId(user.getId());
+			model.setId(user.getId()+"");
 			model.setUsername(user.getUsername());
 			list.add(model);
 		}
@@ -342,7 +342,7 @@ public class SysBaseApiImpl implements ISysBaseAPI {
             ComboModel model = new ComboModel();
             model.setUsername(user.getUsername());
             model.setTitle(user.getRealname());
-            model.setId(user.getId());
+            model.setId(user.getId()+"");
             model.setEmail(user.getEmail());
             if(oConvertUtils.isNotEmpty(userIds)){
                 for(int i = 0; i<userIds.length;i++){

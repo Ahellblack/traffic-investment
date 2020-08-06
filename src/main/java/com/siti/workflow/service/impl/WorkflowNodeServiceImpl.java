@@ -1,18 +1,19 @@
 package com.siti.workflow.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.siti.system.login.entity.SysUser;
 import com.siti.workflow.entity.*;
 import com.siti.workflow.mapper.WorkflowNodeMapper;
-import com.siti.workflow.service.IWorkflowNodeService;
-import com.siti.workflow.service.IWorkflowRealInfoService;
-import com.siti.workflow.service.IWorkflowRealService;
-import com.siti.workflow.service.IWorkflowService;
+import com.siti.workflow.service.*;
 import com.siti.workflow.vo.WorkflowNodeVo;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,9 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
     IWorkflowRealService iWorkflowRealService;
     @Resource
     IWorkflowRealInfoService iWorkflowRealInfoService;
+    @Resource
+    IWorkflowRealTaskProgressService iWorkflowRealTaskProgressService;
+
     @Override
     public List<WorkflowNodeVo> allWorkflowNodeConfig(String workflowCode) {
         List<WorkflowNodeVo> configNodeByworkflowCode = new ArrayList<>();
@@ -54,23 +58,27 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
     @Transactional
     @Override
     public boolean createRealWorkflow(List<WorkflowNodeVo> workflowNodeVos, String constructionCode) {
+        SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
         Workflow workflow = new Workflow();
         if (workflowNodeVos.size() > 0 /*&& oConvertUtils.isEmpty(workflowNodeVos.get(0))*/) {
 
             workflow = iWorkflowService.getByKey(workflowNodeVos.get(0).getWorkflowCode());
         }
         //----------提交主体----------//
-        WorkflowReal workflowReal = new WorkflowReal();
+        WorkflowReal workflowReal = WorkflowReal.builder().createBy(user.getId()).updateBy(user.getId())
+                .createTime( LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")))
+                .updateTime( LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"))).build();
         BeanUtils.copyProperties(workflow, workflowReal);
         workflowReal.setConstructionCode(constructionCode);
         String sheetCode = new StringBuilder(System.currentTimeMillis() / 1000 + "").append(workflowReal.getVersion())
-                .append("-").append((int)(Math.random() * 9 + 1) * 100000).toString();
+                .append("-").append((int) ((Math.random() * 9 + 1) * 100000)).toString();
         workflowReal.setSheetCode(sheetCode);
+
         boolean saveW = iWorkflowRealService.save(workflowReal);
         boolean saveWN = true;
         try {
             workflowNodeVos.stream()
-                    .filter(data -> data.getWorkflowTaskList().size() != 0)
+                    //.filter(data -> data.getWorkflowTaskList().size() != 0)
                     .forEach(nodevo -> {
                         //-------- 添加流程实时表---------//
                         WorkflowRealInfo node = new WorkflowRealInfo();
@@ -78,17 +86,24 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
                         node.setSheetCode(sheetCode);
                         node.setConstructionCode(constructionCode);
                         iWorkflowRealInfoService.save(node);
+
+                        //----------添加任务明细表-----------//
+                        List<WorkflowTask> workflowTaskList = nodevo.getWorkflowTaskList();
+                        for (WorkflowTask task : workflowTaskList) {
+                            WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
+                            BeanUtils.copyProperties(task, rtask);
+                            iWorkflowRealTaskProgressService.save(rtask);
+                        }
+
                     });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             saveWN = false;
         }
-        if(saveW && saveWN){
+        if (saveW && saveWN) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-
-
 }
