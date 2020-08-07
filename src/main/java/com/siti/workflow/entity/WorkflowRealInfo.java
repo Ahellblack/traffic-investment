@@ -31,10 +31,13 @@ public class WorkflowRealInfo {
   private String nodeDesc;
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
-  @ApiModelProperty(value = "进入当前节点时间")
-  private java.sql.Timestamp insideTime;
+  @ApiModelProperty(value = "初始时间")
+  private java.sql.Timestamp initialTime;
   @ApiModelProperty(value = "最后截止时间")
   private java.sql.Timestamp finalTime;
+
+  @ApiModelProperty(value = "进入当前节点时间")
+  private java.sql.Timestamp insideTime;
   @ApiModelProperty(value = "实际完成时间")
   private java.sql.Timestamp finishTime;
   @ApiModelProperty(value = "任务负责人id")

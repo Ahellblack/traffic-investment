@@ -174,3 +174,11 @@ logging:
 #cas单点登录
 cas:
   prefixUrl: http://cas.example.org:8443/cas
+
+swagger: ## 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+## Basic认证用户名
+    username: zyw
+## Basic认证密码
+    password: 123
