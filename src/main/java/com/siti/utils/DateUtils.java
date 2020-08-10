@@ -25,6 +25,13 @@ public class DateUtils extends PropertyEditorSupport {
             return new SimpleDateFormat("yyyy-MM-dd");
         }
     };
+
+    public static ThreadLocal<SimpleDateFormat> date_year_month = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM");
+        }
+    };
     public static ThreadLocal<SimpleDateFormat> yyyyMMdd = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
@@ -390,6 +397,16 @@ public class DateUtils extends PropertyEditorSupport {
     }
 
     /**
+     * 指定日期的默认显示，具体格式：年-月-日
+     *
+     * @param date 指定的日期
+     * @return 指定日期按“年-月-日“格式显示
+     */
+    public static String formatDateYearMonth(Date date) {
+        return date_year_month.get().format(date);
+    }
+
+    /**
      * 指定毫秒数表示日期的默认显示，具体格式：年-月-日
      *
      * @param millis 指定的毫秒数
@@ -640,10 +657,19 @@ public class DateUtils extends PropertyEditorSupport {
         }
     }
 
-    public static int getYear() {
+    public static int getYear(Date date) {
         GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(getDate());
+        calendar.setTime(date);
         return calendar.get(Calendar.YEAR);
+    }
+
+    /**
+     * @date 获取指点时间的月份
+     * */
+    public static int getMonth(Date date) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH);
     }
 
 }

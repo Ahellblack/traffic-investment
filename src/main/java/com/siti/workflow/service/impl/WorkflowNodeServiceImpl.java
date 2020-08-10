@@ -1,7 +1,7 @@
 package com.siti.workflow.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.siti.system.login.entity.SysUser;
+import com.siti.common.vo.LoginUser;
 import com.siti.workflow.entity.*;
 import com.siti.workflow.mapper.WorkflowNodeMapper;
 import com.siti.workflow.service.*;
@@ -58,7 +58,7 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
     @Transactional
     @Override
     public boolean createRealWorkflow(List<WorkflowNodeVo> workflowNodeVos, String constructionCode) {
-        SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
+        LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         Workflow workflow = new Workflow();
         if (workflowNodeVos.size() > 0 /*&& oConvertUtils.isEmpty(workflowNodeVos.get(0))*/) {
 
@@ -92,6 +92,8 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
                         for (WorkflowTask task : workflowTaskList) {
                             WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
                             BeanUtils.copyProperties(task, rtask);
+                            rtask.setSheetCode(sheetCode);
+                            rtask.setConstructionCode(constructionCode);
                             iWorkflowRealTaskProgressService.save(rtask);
                         }
 

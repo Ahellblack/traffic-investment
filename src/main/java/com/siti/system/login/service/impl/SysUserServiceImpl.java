@@ -194,7 +194,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 		}
 		
 		//多部门支持in查询
-		List<SysDepart> list = sysDepartMapper.queryUserDeparts(user.getId());
+		List<SysDepart> list = sysDepartMapper.queryUserDeparts(user.getId()+"");
 		List<String> sysMultiOrgCode = new ArrayList<String>();
 		if(list==null || list.size()==0) {
 			//当前用户无部门

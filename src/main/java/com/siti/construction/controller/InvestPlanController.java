@@ -102,7 +102,11 @@ public class InvestPlanController {
     /***
      * 生成某个项目的年度计划
      * @Param constructionCode
-     *
      * * */
+    @PostMapping("createInvestPlan")
+    public Result<?> createInvestPlan(String constructionCode) {
+        iInvestPlanService.createInvestPlan(constructionCode);
+        return Result.ok("生成成功!");
+    }
 
 }

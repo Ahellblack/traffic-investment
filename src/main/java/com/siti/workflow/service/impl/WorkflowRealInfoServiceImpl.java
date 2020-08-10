@@ -2,6 +2,7 @@ package com.siti.workflow.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.siti.workflow.entity.WorkflowRealInfo;
+import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import com.siti.workflow.mapper.WorkflowRealInfoMapper;
 import com.siti.workflow.service.IWorkflowRealInfoService;
 import com.siti.workflow.vo.WorkflowRealInfoVo;
@@ -25,5 +26,11 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
 
         //#TODO 对 infoVos添加任务信息
         return infoVos;
+    }
+
+    @Override
+    public List<WorkflowRealTaskProgress> realProcessTask(String constructionCode,Integer nodeCode) {
+        List<WorkflowRealTaskProgress> taskProgress = workflowRealInfoMapper.realProcessTask(constructionCode,nodeCode);
+        return taskProgress;
     }
 }

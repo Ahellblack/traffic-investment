@@ -29,5 +29,6 @@ public class BusinessInvestPlan {
   private java.sql.Timestamp updateTime;
   private String updateBy;
   private java.sql.Timestamp finishTime;
- 
+  @ApiModelProperty(value = "类型 1前期 2工程")
+  private int type;
 }

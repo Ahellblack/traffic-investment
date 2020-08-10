@@ -30,6 +30,7 @@ public class WorkflowTask {
     private long haveRamification;
     @ApiModelProperty(value = "衍生流程号")
     private long ramificWorkflowId;
-
+    @ApiModelProperty(value = "类型 1前期 2工程")
+    private int type;
 
 }

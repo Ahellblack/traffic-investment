@@ -1,6 +1,6 @@
 package com.siti.common.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,30 +21,29 @@ import java.util.Date;
 @Accessors(chain = true)
 public class LoginUser {
 
-	/**
-	 * 登录人id
-	 */
-	private String id;
+
+	private int id;
 
 	/**
-	 * 登录人账号
+	 * 登录账号
 	 */
 	private String username;
 
 	/**
-	 * 登录人名字
+	 * 真实姓名
 	 */
 	private String realname;
 
 	/**
-	 * 登录人密码
+	 * 密码
 	 */
 	private String password;
 
-     /**
-      * 当前登录部门code
-      */
-    private String orgCode;
+	/**
+	 * md5密码盐
+	 */
+	private String salt;
+
 	/**
 	 * 头像
 	 */
@@ -53,7 +52,6 @@ public class LoginUser {
 	/**
 	 * 生日
 	 */
-	@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthday;
 
@@ -73,15 +71,40 @@ public class LoginUser {
 	private String phone;
 
 	/**
-	 * 状态(1：正常 2：冻结 ）
+	 * 部门code(当前选择登录部门)
+	 */
+	private String orgCode;
+
+	/**
+	 * 状态(1：正常  2：冻结 ）
 	 */
 	private Integer status;
-	
-	private String delFlag;
+
 	/**
-     * 同步工作流引擎1同步0不同步
-     */
-    private String activitiSync;
+	 * 删除状态（0，正常，1已删除）
+	 */
+	@TableLogic
+	private String delFlag;
+
+	/**
+	 * 工号，唯一键
+	 */
+	private String workNo;
+
+	/**
+	 * 职务，关联职务表
+	 */
+	private String post;
+
+	/**
+	 * 座机号
+	 */
+	private String telephone;
+
+	/**
+	 * 创建人
+	 */
+	private String createBy;
 
 	/**
 	 * 创建时间
@@ -89,13 +112,26 @@ public class LoginUser {
 	private Date createTime;
 
 	/**
-	 *  身份（1 普通员工 2 上级）
+	 * 更新人
+	 */
+	private String updateBy;
+
+	/**
+	 * 更新时间
+	 */
+	private Date updateTime;
+	/**
+	 * 同步工作流引擎1同步0不同步
+	 */
+	private String activitiSync;
+
+	/**
+	 * 身份（0 普通成员 1 上级）
 	 */
 	private Integer identity;
 
 	/**
-	 * 管理部门ids
+	 * 负责部门
 	 */
 	private String departIds;
-
 }

@@ -38,6 +38,13 @@ public class WorkflowRealTaskProgress {
   private long finishUserId;
   @ApiModelProperty(value = "任务完成人名称")
   private String finishUserName;
+  @ApiModelProperty(value = "是否已完成 0 未完成 1 已完成")
+  private int status;
+  @ApiModelProperty(value = "类型 1前期 2工程")
+  private int type;
+  @ApiModelProperty(value = "流程编号")
+  private String sheetCode;
+
 
 
 }

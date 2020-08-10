@@ -1,6 +1,7 @@
 package com.siti.workflow.controller;
 
 import com.siti.common.Result;
+import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import com.siti.workflow.service.IWorkflowRealInfoService;
 import com.siti.workflow.vo.WorkflowRealInfoVo;
 import io.swagger.annotations.ApiOperation;
@@ -29,5 +30,12 @@ public class RealProcessController {
         return Result.ok(workflowRealInfoVos);
     }
 
+    @ApiOperation(value="项目任务详细信息查看", notes="项目任务详细信息查看")
+    @GetMapping("task")
+    public Result<?> realProcessTask(String constructionCode,Integer nodeCode) {
+
+        List<WorkflowRealTaskProgress> workflowRealTaskProgress = iWorkflowRealInfoService.realProcessTask(constructionCode,nodeCode);
+        return Result.ok(workflowRealTaskProgress);
+    }
 
 }

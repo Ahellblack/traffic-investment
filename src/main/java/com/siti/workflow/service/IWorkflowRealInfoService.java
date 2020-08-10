@@ -2,6 +2,7 @@ package com.siti.workflow.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.siti.workflow.entity.WorkflowRealInfo;
+import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import com.siti.workflow.vo.WorkflowRealInfoVo;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface IWorkflowRealInfoService extends IService<WorkflowRealInfo> {
 
     List<WorkflowRealInfoVo> realProcessInfo(String constructionCode);
 
+    List<WorkflowRealTaskProgress> realProcessTask(String constructionCode,Integer nodeCode);
 }
