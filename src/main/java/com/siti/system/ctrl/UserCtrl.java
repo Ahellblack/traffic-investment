@@ -136,5 +136,12 @@ public class UserCtrl extends BaseCtrl<UserBiz,User> {
 		biz.deleteById(id);
 		return 1;
 	}
+
+	@DeleteMapping("passwordForget")
+	public int passwordForget(@PathVariable Integer id) {
+		biz.deleteById(id);
+		return 1;
+	}
+
 	
 }
