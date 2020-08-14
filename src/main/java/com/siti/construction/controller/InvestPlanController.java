@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by 12293 on 2020/8/7.
@@ -22,16 +23,17 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping("annualPlan")
-@Api(value = "年度计划")
+@Api(tags = "年度计划")
 public class InvestPlanController {
 
     @Resource
     IInvestPlanService iInvestPlanService;
 
+
     /**
      * 分页列表查询
      *
-     * @param ym 年月 YYYY-MM
+     * @param year               年月 YYYY-MM
      * @param constructionCode
      * @param pageNo
      * @param pageSize
@@ -40,12 +42,14 @@ public class InvestPlanController {
      */
     @ApiOperation(value = "获取年度计划列表", notes = "获取年度计划列表")
     @GetMapping(value = "/list")
-    public Result<?> list(String ym, String constructionCode, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+    public Result<?> list(String year, String constructionCode, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                           HttpServletRequest req) {
         QueryWrapper<BusinessInvestPlan> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("construction_code",constructionCode);
-        if(ym!=""){
-            queryWrapper.eq("ym",ym);
+        queryWrapper.eq("construction_code", constructionCode)
+                .orderByAsc("ym")
+                .orderByAsc("type");
+        if (year != "" && year !=null) {
+            queryWrapper.like("ym", year);
         }
         Page<BusinessInvestPlan> page = new Page<>(pageNo, pageSize);
         IPage<BusinessInvestPlan> pageList = iInvestPlanService.page(page, queryWrapper);
@@ -54,6 +58,37 @@ public class InvestPlanController {
         log.info("查询结果数量：" + pageList.getRecords().size());
         log.info("数据总数：" + pageList.getTotal());
         return Result.ok(pageList);
+    }
+
+    /***
+     * 生成某个项目的年度计划
+     * @Param constructionCode
+     * * */
+    @AutoLog(value = "生成某个项目的年度计划")
+    @PostMapping("createInvestPlan")
+    @ApiOperation(value = "生成某个项目的年度计划", notes = "生成某个项目的年度计划")
+    public Result<?> createInvestPlan(String constructionCode) {
+        boolean investPlan = iInvestPlanService.createInvestPlan(constructionCode);
+        if (investPlan) {
+            return Result.ok("生成成功!");
+        }
+        return Result.error("生成失败，检查参数");
+    }
+
+    /**
+     * 编辑
+     *
+     * @param BusinessInvestPlan
+     * @return
+     */
+    @PutMapping(value = "/editList")
+    @ApiOperation(value = "批量编辑年度计划表", notes = "批量编辑年度计划表")
+    @AutoLog(value = "批量编辑年度计划表", operateType = CommonConstant.OPERATE_TYPE_3)
+    public Result<?> editList(@RequestBody List<BusinessInvestPlan> BusinessInvestPlan) {
+        BusinessInvestPlan.forEach(data->{
+            iInvestPlanService.updateById(data);
+        });
+        return Result.ok("更新成功！");
     }
 
     /**
@@ -99,14 +134,6 @@ public class InvestPlanController {
     }
 
 
-    /***
-     * 生成某个项目的年度计划
-     * @Param constructionCode
-     * * */
-    @PostMapping("createInvestPlan")
-    public Result<?> createInvestPlan(String constructionCode) {
-        iInvestPlanService.createInvestPlan(constructionCode);
-        return Result.ok("生成成功!");
-    }
+
 
 }

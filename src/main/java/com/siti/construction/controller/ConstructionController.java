@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping("construction")
-@Api(value = "项目列表")
+@Api(tags = "项目列表")
 public class ConstructionController {
 
     @Resource

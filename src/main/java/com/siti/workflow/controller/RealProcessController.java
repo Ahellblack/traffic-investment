@@ -3,11 +3,11 @@ package com.siti.workflow.controller;
 import com.siti.common.Result;
 import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import com.siti.workflow.service.IWorkflowRealInfoService;
+import com.siti.workflow.vo.WorkflowNodeVo;
 import com.siti.workflow.vo.WorkflowRealInfoVo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("process")
+@Api(tags = "工程流程")
 public class RealProcessController {
 
     @Resource
@@ -37,5 +38,17 @@ public class RealProcessController {
         List<WorkflowRealTaskProgress> workflowRealTaskProgress = iWorkflowRealInfoService.realProcessTask(constructionCode,nodeCode);
         return Result.ok(workflowRealTaskProgress);
     }
+
+    @ApiOperation(value="修改数据表workflow_reaList<WorkflowNodeVo> workflowNodeVosl,workflow_real_info,workflow_real_task_progress", notes="workflow_real,workflow_real_info,workflow_real_task_progress")
+    @PostMapping("updateRealInfo")
+    public Result<?> updateRealInfo(@RequestBody List<WorkflowNodeVo> workflowNodeVos) {
+        boolean flag = iWorkflowRealInfoService.updateRealInfo(workflowNodeVos);
+        if(flag)
+            return Result.ok(workflowNodeVos);
+        return Result.error("添加失败");
+    }
+
+
+
 
 }

@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Solarie on 2020/6/18.
@@ -43,8 +43,13 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
             configNodeByworkflowCode = workflowNodeMapper.findConfigNodeByworkflowCode(workflowCode);
             configNodeByworkflowCode.forEach(data -> {
                 WorkflowNodeVo workflowNodeVo = Optional.ofNullable(data).get();
-                List<WorkflowTask> configTaskByworkflowNode = workflowNodeMapper
-                        .findConfigTaskByworkflowNode(workflowNodeVo.getWorkflowCode(), workflowNodeVo.getNodeCode());
+                List<WorkflowRealTaskProgress> configTaskByworkflowNode = workflowNodeMapper
+                        .findConfigTaskByworkflowNode(workflowNodeVo.getWorkflowCode(), workflowNodeVo.getNodeCode())
+                        .stream().map(task -> {
+                            WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
+                            BeanUtils.copyProperties(task, rtask);
+                            return rtask;
+                        }).collect(Collectors.toList());
                 data.setWorkflowTaskList(configTaskByworkflowNode);
             });
         }
@@ -66,8 +71,8 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
         }
         //----------提交主体----------//
         WorkflowReal workflowReal = WorkflowReal.builder().createBy(user.getId()).updateBy(user.getId())
-                .createTime( LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")))
-                .updateTime( LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"))).build();
+                .createTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")))
+                .updateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"))).build();
         BeanUtils.copyProperties(workflow, workflowReal);
         workflowReal.setConstructionCode(constructionCode);
         String sheetCode = new StringBuilder(System.currentTimeMillis() / 1000 + "").append(workflowReal.getVersion())
@@ -80,23 +85,33 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
             workflowNodeVos.stream()
                     //.filter(data -> data.getWorkflowTaskList().size() != 0)
                     .forEach(nodevo -> {
-                        //-------- 添加流程实时表---------//
-                        WorkflowRealInfo node = new WorkflowRealInfo();
-                        BeanUtils.copyProperties(nodevo, node);
-                        node.setSheetCode(sheetCode);
-                        node.setConstructionCode(constructionCode);
-                        iWorkflowRealInfoService.save(node);
 
                         //----------添加任务明细表-----------//
-                        List<WorkflowTask> workflowTaskList = nodevo.getWorkflowTaskList();
-                        for (WorkflowTask task : workflowTaskList) {
+                        List<WorkflowRealTaskProgress> workflowTaskList = nodevo.getWorkflowTaskList();
+                        List<Date> el = new ArrayList<>();
+                        for (WorkflowRealTaskProgress task : workflowTaskList) {
                             WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
                             BeanUtils.copyProperties(task, rtask);
                             rtask.setSheetCode(sheetCode);
                             rtask.setConstructionCode(constructionCode);
                             iWorkflowRealTaskProgressService.save(rtask);
+                            el.add(task.getInitialTime());
+                            el.add(task.getFinalTime());
                         }
 
+                        //-------- 添加流程实时表---------//
+                        WorkflowRealInfo node = new WorkflowRealInfo();
+                        BeanUtils.copyProperties(nodevo, node);
+                        node.setSheetCode(sheetCode);
+                        node.setConstructionCode(constructionCode);
+                        //自然排序时间 取最小及最大时间生成node
+                        el.removeAll(Collections.singleton(null));
+                        if (el.size() > 0 ) {
+                            List<Date> collect = el.stream().sorted().collect(Collectors.toList());
+                            node.setInitialTime(new Timestamp(collect.get(0).getTime()));
+                            node.setFinalTime(new Timestamp(collect.get(collect.size()-1).getTime()));
+                        }
+                        iWorkflowRealInfoService.save(node);
                     });
         } catch (Exception e) {
             e.printStackTrace();

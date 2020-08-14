@@ -1,6 +1,6 @@
 package com.siti.workflow.vo;
 
-import com.siti.workflow.entity.WorkflowTask;
+import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +40,7 @@ public class WorkflowNodeVo {
     @ApiModelProperty(value = "项目名称")
     private String constructionName;
 
-    private List<WorkflowTask> workflowTaskList;
+    private List<WorkflowRealTaskProgress> workflowTaskList;
 
 
 

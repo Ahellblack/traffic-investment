@@ -14,6 +14,7 @@ import com.siti.system.login.service.*;
 import com.siti.utils.PasswordUtil;
 import com.siti.utils.RedisUtil;
 import com.siti.utils.oConvertUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/sys/user")
+@Api(tags = "用户表操作")
 public class SysUserController {
 	@Autowired
 	private ISysBaseAPI sysBaseAPI;
