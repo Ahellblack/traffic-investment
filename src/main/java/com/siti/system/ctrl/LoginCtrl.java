@@ -1,6 +1,6 @@
 package com.siti.system.ctrl;
 
-import com.siti.system.login.entity.SysUser;
+import com.siti.common.vo.LoginUser;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,13 +16,13 @@ public class LoginCtrl {
 
    /**
     * 获取当前登录用户
-    *
-    * @return
+    * @return LoginUser
     */
     @PostMapping
-    public static SysUser getLoginUserInfo() {
-        SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
-        return user;
+    public static LoginUser getLoginUserInfo() {
+        //获取登录用户信息
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        return sysUser;
     }
 
 }
