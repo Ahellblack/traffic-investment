@@ -66,6 +66,8 @@ public class LoginController {
     @Resource
     private OrgBiz orgBiz;
     private static final String BASE_CHECK_CODES = "qwertyuiplkjhgfdsazxcvbnmQWERTYUPLKJHGFDSAZXCVBNM1234567890";
+    @Resource
+    private SysUserController sysUserController;
 
     @ApiOperation("登录接口")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -147,6 +149,48 @@ public class LoginController {
         } else {
             return Result.error("Token无效!");
         }
+    }
+
+
+    /**
+     * 发送验证码
+     *@param number
+     * @return
+     */
+    @RequestMapping(value = "/sendVeriCode")
+    public Result<Object> sendVeriCode(String number) {
+        if(number!=null && number!= "") {
+            int i = (int) ((Math.random() * 9 + 1) * 100000);
+            // 设置token缓存有效时间
+            redisUtil.set(number + i, i+"");
+            redisUtil.expire(number + i, JwtUtil.EXPIRE_TIME * 2 / 1000);
+            //发送短信
+            MsgUtil.sendMsg(number,i+"");
+
+            return Result.ok("发送成功");
+        }
+        return Result.ok("发送失败，检查参数");
+    }
+
+    /**
+     * 校验验证码
+     *@param number
+     * @return
+     */
+    @RequestMapping(value = "/checkVeriCode")
+    public Result<Object> checkVeriCode(String number,String veriCode) {
+        if(number!=null && number!= ""
+                && veriCode!=null && veriCode !="") {
+            String str = (String)redisUtil.get(number + veriCode);
+            if(str!=null ){
+                //根据手机号获取用户信息
+                SysUser userMsgByPhone = sysUserController.getUserMsgByPhone(number);
+                return Result.ok(userMsgByPhone);
+            }else {
+                return Result.ok("验证失败");
+            }
+        }
+        return Result.ok("验证失败，检查参数");
     }
 
     /**

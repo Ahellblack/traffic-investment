@@ -71,6 +71,9 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/cas/client/validateLogin", "anon");
 		// 配置不会被拦截的链接 顺序判断
 		filterChainDefinitionMap.put("/sys/getCheckCode", "anon"); //登录验证码接口排除
+		filterChainDefinitionMap.put("/sys/sendVeriCode/**", "anon"); //发送验证码
+		filterChainDefinitionMap.put("/sys/checkVeriCode/**", "anon"); //检查验证码
+		filterChainDefinitionMap.put("/sys/user/changePassword", "anon"); //修改密码
 		filterChainDefinitionMap.put("/sys/randomImage/**", "anon"); //登录验证码接口排除
 		filterChainDefinitionMap.put("/sys/login", "anon"); //登录接口排除
 		filterChainDefinitionMap.put("/sys/mLogin", "anon"); //登录接口排除

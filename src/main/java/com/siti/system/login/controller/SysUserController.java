@@ -236,5 +236,15 @@ public class SysUserController {
         return sysUserService.changePassword(sysUser);
     }
 
+	//根据手机号获取用户信息
+	public SysUser getUserMsgByPhone(String number) {
+		QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
+		sysUserQueryWrapper.eq("telephone",number);
+		SysUser u = sysUserService.getOne(sysUserQueryWrapper);
+		if (u == null) {
+			return null;
+		}
+		return u;
+	}
 
 }
