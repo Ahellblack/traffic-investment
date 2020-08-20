@@ -32,16 +32,20 @@ public class WorkflowRealInfo {
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
   @ApiModelProperty(value = "初始时间")
-  private java.sql.Timestamp initialTime;
+  private String initialTime;
   @ApiModelProperty(value = "最后截止时间")
-  private java.sql.Timestamp finalTime;
+  private String finalTime;
 
   @ApiModelProperty(value = "进入当前节点时间")
-  private java.sql.Timestamp insideTime;
+  private String insideTime;
   @ApiModelProperty(value = "实际完成时间")
-  private java.sql.Timestamp finishTime;
+  private String finishTime;
   @ApiModelProperty(value = "任务负责人id")
   private long approvalUserId;
   @ApiModelProperty(value = "任务负责人名称")
   private String approvalUserName;
+  @ApiModelProperty(value = "是否已完成 0 未完成 1 已完成")
+  private int status;
+  private Integer onUsed;// 是否启用 0 否 1 是
+
 }

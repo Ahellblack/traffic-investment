@@ -16,7 +16,7 @@ public interface IWorkflowRealInfoService extends IService<WorkflowRealInfo> {
 
     List<WorkflowRealInfoVo> realProcessInfo(String constructionCode);
 
-    List<WorkflowRealTaskProgress> realProcessTask(String constructionCode,Integer nodeCode);
+    List<WorkflowRealTaskProgress> realProcessTask(String constructionCode,String nodeCode);
 
     @Transactional
     boolean updateRealInfo(List<WorkflowNodeVo> workflowNodeVos);

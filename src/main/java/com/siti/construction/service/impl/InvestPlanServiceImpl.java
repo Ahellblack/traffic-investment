@@ -62,8 +62,8 @@ public class InvestPlanServiceImpl extends ServiceImpl<InvestPlanMapper, Busines
             Map<String, Set<String>> map = new HashMap<>();
             workflowRealTaskProgresses.stream().filter(data -> Optional.ofNullable(data.getTaskName()).get() != "").forEach(data -> {
 
-                Date finalTime = data.getFinalTime();
-                Date initialTime = data.getInitialTime();
+                Date finalTime = DateUtils.str2Date(data.getFinalTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                Date initialTime = DateUtils.str2Date(data.getInitialTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
                 String name = data.getTaskName();
                 Set<String> stringSet = Optional.ofNullable(map.get(DateUtils.formatDateYearMonth(initialTime)))
                         .orElse(new HashSet<>());

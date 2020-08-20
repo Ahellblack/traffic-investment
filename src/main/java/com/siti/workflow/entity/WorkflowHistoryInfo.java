@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,11 +31,11 @@ public class WorkflowHistoryInfo {
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
   @ApiModelProperty(value = "进入当前节点时间")
-  private java.sql.Timestamp insideTime;
+  private String insideTime;
   @ApiModelProperty(value = "最后截止时间")
-  private java.sql.Timestamp finalTime;
+  private String finalTime;
   @ApiModelProperty(value = "实际完成时间")
-  private java.sql.Timestamp finishTime;
+  private String finishTime;
   @ApiModelProperty(value = "主键")
   private long approvalUserId;
   @ApiModelProperty(value = "主键")

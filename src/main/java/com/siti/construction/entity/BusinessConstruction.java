@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class BusinessConstruction {
     @ApiModelProperty(value = "工程名称")
     private String constructionName;
     @ApiModelProperty(value = "工程类型")
-    private long type;
+    private String type;
     @ApiModelProperty(value = "工程状态")
     private long status;
     @ApiModelProperty(value = "建设内容/项目描述")
@@ -35,7 +37,7 @@ public class BusinessConstruction {
     @ApiModelProperty(value = "建设投资金额")
     private double constructionInvest;
     @ApiModelProperty(value = "创建时间")
-    private java.sql.Timestamp createTime;
+    private Date createTime;
     @ApiModelProperty(value = "创建人")
     private String createBy;
     @ApiModelProperty(value = "修改时间")
@@ -45,13 +47,13 @@ public class BusinessConstruction {
     @ApiModelProperty(value = "工程名称")
     private String imageUrl;
     @ApiModelProperty(value = "初始时间")
-    private java.sql.Timestamp initialTime;
+    private String initialTime;
     @ApiModelProperty(value = "最后截止时间")
-    private java.sql.Timestamp finalTime;
+    private String finalTime;
     @ApiModelProperty(value = "任务实际完成时间")
-    private java.sql.Timestamp insideTime;
+    private String insideTime;
     @ApiModelProperty(value = "实际完成时间")
-    private java.sql.Timestamp finishTime;
+    private String finishTime;
 
     @ApiModelProperty(value = "项目经理")
     private String pm;
@@ -65,6 +67,7 @@ public class BusinessConstruction {
     private String superviseUnit;
     @ApiModelProperty(value = "财务监管单位")
     private String financeUnit;
+
 
 
 }

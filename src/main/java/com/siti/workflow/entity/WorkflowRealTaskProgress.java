@@ -1,5 +1,6 @@
 package com.siti.workflow.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +28,13 @@ public class WorkflowRealTaskProgress {
   @ApiModelProperty(value = "任务描述")
   private String taskDesc;
   @ApiModelProperty(value = "初始时间")
-  private java.sql.Timestamp initialTime;
+  private String initialTime;
   @ApiModelProperty(value = "最后截止时间")
-  private java.sql.Timestamp finalTime;
+  private String finalTime;
   @ApiModelProperty(value = "任务实际完成时间")
-  private java.sql.Timestamp insideTime;
+  private String insideTime;
   @ApiModelProperty(value = "实际完成时间")
-  private java.sql.Timestamp finishTime;
+  private String finishTime;
   @ApiModelProperty(value = "任务完成人")
   private long finishUserId;
   @ApiModelProperty(value = "任务完成人名称")
@@ -44,7 +45,6 @@ public class WorkflowRealTaskProgress {
   private int type;
   @ApiModelProperty(value = "流程编号")
   private String sheetCode;
-
-
+  private Integer onUsed;// 是否启用 0 否 1 是
 
 }

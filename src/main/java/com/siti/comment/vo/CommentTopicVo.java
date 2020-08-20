@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -17,7 +18,7 @@ public class CommentTopicVo {
   private String topicType;
   private String content;
   private long fromUid;
-  private java.sql.Timestamp createTime;
+  private Date createTime;
   private long toUid;
   private Long pid;
 

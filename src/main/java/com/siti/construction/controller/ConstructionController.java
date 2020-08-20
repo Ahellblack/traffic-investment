@@ -31,7 +31,6 @@ public class ConstructionController {
     /**
      * 分页列表查询
      *
-     * @param BusinessConstruction
      * @param pageNo
      * @param pageSize
      * @param req
@@ -39,10 +38,16 @@ public class ConstructionController {
      */
     @ApiOperation(value = "获取项目数据列表", notes = "获取项目数据列表")
     @GetMapping(value = "/list")
-    public Result<?> list(BusinessConstruction BusinessConstruction, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+    public Result<?> list(Integer status, String year, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                           HttpServletRequest req) {
         QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("construction_code");
+        if(status!=null) {
+            queryWrapper.eq("status", status);
+        }
+        if(year!=null && year != ""){
+            queryWrapper.likeLeft("initial_time",year);
+        }
         Page<BusinessConstruction> page = new Page<>(pageNo, pageSize);
         //List<BusinessConstruction> list = iConstructionService.list(queryWrapper);
         IPage<BusinessConstruction> pageList = iConstructionService.page(page, queryWrapper);
@@ -52,6 +57,23 @@ public class ConstructionController {
         log.info("数据总数：" + pageList.getTotal());
         return Result.ok(pageList);
     }
+
+
+    /**
+     * 分页列表查询
+     *
+     * @param constructionCode
+     * @return
+     */
+    @ApiOperation(value = "获取一个项目数据", notes = "获取一个项目数据")
+    @GetMapping(value = "/getOne")
+    public Result<?> getOne(String constructionCode) {
+        QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("construction_code", constructionCode);
+        BusinessConstruction construction = iConstructionService.getOne(queryWrapper);
+        return Result.ok(construction);
+    }
+
 
     /**
      * 添加
@@ -63,8 +85,12 @@ public class ConstructionController {
     @AutoLog(value = "添加项目信息")
     @ApiOperation(value = "添加项目信息", notes = "添加项目信息")
     public Result<?> add(@RequestBody BusinessConstruction BusinessConstruction) {
+        String constructionCode = new StringBuilder(System.currentTimeMillis() / 1000 + "")
+                .append("PDJT")
+                .append("-").append((int) ((Math.random() * 9 + 1) * 100000)).toString();
+        BusinessConstruction.setConstructionCode(constructionCode);
         iConstructionService.save(BusinessConstruction);
-        return Result.ok("添加成功！");
+        return Result.ok("添加成功！",constructionCode);
     }
 
     /**

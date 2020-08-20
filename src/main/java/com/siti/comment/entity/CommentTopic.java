@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,7 +17,7 @@ public class CommentTopic {
   private String topicType;
   private String content;
   private long fromUid;
-  private java.sql.Timestamp createTime;
+  private Date createTime;
   private long toUid;
   private Long pid;
 

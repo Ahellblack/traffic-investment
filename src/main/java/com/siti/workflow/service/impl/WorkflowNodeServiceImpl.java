@@ -2,6 +2,7 @@ package com.siti.workflow.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.siti.common.vo.LoginUser;
+import com.siti.utils.DateUtils;
 import com.siti.workflow.entity.*;
 import com.siti.workflow.mapper.WorkflowNodeMapper;
 import com.siti.workflow.service.*;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -85,18 +87,20 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
             workflowNodeVos.stream()
                     //.filter(data -> data.getWorkflowTaskList().size() != 0)
                     .forEach(nodevo -> {
-
+                        //if (nodevo.getOnUsed() == 1) { //是否被勾选中
                         //----------添加任务明细表-----------//
                         List<WorkflowRealTaskProgress> workflowTaskList = nodevo.getWorkflowTaskList();
                         List<Date> el = new ArrayList<>();
                         for (WorkflowRealTaskProgress task : workflowTaskList) {
+                            //if (task.getOnUsed() == 1) { //是否被勾选中
                             WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
                             BeanUtils.copyProperties(task, rtask);
                             rtask.setSheetCode(sheetCode);
                             rtask.setConstructionCode(constructionCode);
                             iWorkflowRealTaskProgressService.save(rtask);
-                            el.add(task.getInitialTime());
-                            el.add(task.getFinalTime());
+                            el.add(DateUtils.str2Date(task.getInitialTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                            el.add(DateUtils.str2Date(task.getFinalTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                            //}
                         }
 
                         //-------- 添加流程实时表---------//
@@ -106,12 +110,13 @@ public class WorkflowNodeServiceImpl extends ServiceImpl<WorkflowNodeMapper, Wor
                         node.setConstructionCode(constructionCode);
                         //自然排序时间 取最小及最大时间生成node
                         el.removeAll(Collections.singleton(null));
-                        if (el.size() > 0 ) {
+                        if (el.size() > 0) {
                             List<Date> collect = el.stream().sorted().collect(Collectors.toList());
-                            node.setInitialTime(new Timestamp(collect.get(0).getTime()));
-                            node.setFinalTime(new Timestamp(collect.get(collect.size()-1).getTime()));
+                            node.setInitialTime(DateUtils.timestamptoStr(new Timestamp(collect.get(0).getTime())));
+                            node.setFinalTime(DateUtils.timestamptoStr(new Timestamp(collect.get(collect.size() - 1).getTime())));
                         }
                         iWorkflowRealInfoService.save(node);
+                        // }
                     });
         } catch (Exception e) {
             e.printStackTrace();

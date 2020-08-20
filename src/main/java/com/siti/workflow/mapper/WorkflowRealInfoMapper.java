@@ -17,15 +17,21 @@ public interface WorkflowRealInfoMapper extends BaseMapper<WorkflowRealInfo> {
     @Select("SELECT\n" +
             "\t* \n" +
             "FROM\n" +
-            "\tworkflow_real wr\n" +
+            "\t( SELECT * FROM workflow_real WHERE construction_code = #{constructionCode} ORDER BY create_time desc limit 1) wr\n" +
             "\tLEFT JOIN workflow_real_info wri ON wr.sheet_code = wri.sheet_code \n" +
-            "WHERE\n" +
-            "\twr.sheet_code = #{sheetCode} ")
-    List<WorkflowRealInfoVo> getRealWorkflowByConstructionCode(@Param("sheetCode")String sheetCode);
+            "\tAND wr.type = 1 ")
+    List<WorkflowRealInfoVo> getRealWorkflowByConstructionCode(@Param("constructionCode")String constructionCode);
 
     @Select("<script>SELECT * FROM `workflow_real_task_progress` wrtp " +
             "where construction_code = #{constructionCode}" +
             "<if test = \'nodeCode!= null\'>and node_code = #{nodeCode}</if>" +
             "</script>")
-    List<WorkflowRealTaskProgress> realProcessTask(@Param("constructionCode")String constructionCode,@Param("nodeCode") Integer nodeCode);
+    List<WorkflowRealTaskProgress> realProcessTask(@Param("constructionCode")String constructionCode,@Param("nodeCode") String nodeCode);
+
+    @Select("<script>SELECT * FROM `workflow_real_task_progress` wrtp " +
+            "where sheet_code = #{sheetCode}" +
+            "<if test = \'nodeCode!= null\'>and node_code = #{nodeCode}</if>" +
+            "</script>")
+    List<WorkflowRealTaskProgress> realProcessTaskBySheetCode(@Param("sheetCode")String sheetCode,@Param("nodeCode") String nodeCode);
+
 }

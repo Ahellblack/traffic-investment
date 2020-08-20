@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -24,11 +26,11 @@ public class BusinessInvestPlan {
   private String sum;
   @ApiModelProperty(value = "工作量")
   private String workload;
-  private java.sql.Timestamp createTime;
+  private Date createTime;
   private String createBy;
   private java.sql.Timestamp updateTime;
   private String updateBy;
-  private java.sql.Timestamp finishTime;
+  private String finishTime;
   @ApiModelProperty(value = "类型 1前期 2工程")
   private int type;
 }

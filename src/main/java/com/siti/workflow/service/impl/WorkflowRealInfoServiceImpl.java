@@ -2,6 +2,7 @@ package com.siti.workflow.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.siti.common.vo.LoginUser;
+import com.siti.utils.DateUtils;
 import com.siti.workflow.entity.Workflow;
 import com.siti.workflow.entity.WorkflowRealInfo;
 import com.siti.workflow.entity.WorkflowRealTaskProgress;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -47,13 +49,16 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
     @Override
     public List<WorkflowRealInfoVo> realProcessInfo(String constructionCode) {
         List<WorkflowRealInfoVo> infoVos = workflowRealInfoMapper.getRealWorkflowByConstructionCode(constructionCode);
-
-        //#TODO 对 infoVos添加任务信息
+        if(infoVos!=null)
+        infoVos.forEach(realinfo->{
+            List<WorkflowRealTaskProgress> workflowRealTaskProgresses = workflowRealInfoMapper.realProcessTaskBySheetCode(realinfo.getSheetCode(), realinfo.getNodeCode());
+            realinfo.setTaskProgressList(workflowRealTaskProgresses);
+        });
         return infoVos;
     }
 
     @Override
-    public List<WorkflowRealTaskProgress> realProcessTask(String constructionCode, Integer nodeCode) {
+    public List<WorkflowRealTaskProgress> realProcessTask(String constructionCode, String nodeCode) {
         List<WorkflowRealTaskProgress> taskProgress = workflowRealInfoMapper.realProcessTask(constructionCode, nodeCode);
         return taskProgress;
     }
@@ -93,8 +98,8 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                             WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
                             BeanUtils.copyProperties(task, rtask);
                             iWorkflowRealTaskProgressService.updateById(rtask);
-                            el.add(task.getInitialTime());
-                            el.add(task.getFinalTime());
+                            el.add(DateUtils.str2Date(task.getInitialTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                            el.add(DateUtils.str2Date(task.getFinalTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
                         }
 
                         //-------- 编辑流程实时表---------//
@@ -104,8 +109,8 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                         el.removeAll(Collections.singleton(null));
                         if (el.size() > 0) {
                             List<Date> collect = el.stream().sorted().collect(Collectors.toList());
-                            node.setInitialTime(new Timestamp(collect.get(0).getTime()));
-                            node.setFinalTime(new Timestamp(collect.get(collect.size() - 1).getTime()));
+                            node.setInitialTime(DateUtils.timestamptoStr( new Timestamp(collect.get(0).getTime())));
+                            node.setFinalTime(DateUtils.timestamptoStr(new Timestamp(collect.get(collect.size() - 1).getTime())));
                         }
                         this.updateById(node);
                     });

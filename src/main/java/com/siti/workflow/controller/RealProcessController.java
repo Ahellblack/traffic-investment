@@ -26,14 +26,13 @@ public class RealProcessController {
     @ApiOperation(value="主流程，详细信息查看", notes="主流程，详细信息查看")
     @GetMapping("info")
     public Result<?> realProcessInfo(String constructionCode) {
-
         List<WorkflowRealInfoVo> workflowRealInfoVos = iWorkflowRealInfoService.realProcessInfo(constructionCode);
         return Result.ok(workflowRealInfoVos);
     }
 
     @ApiOperation(value="项目任务详细信息查看", notes="项目任务详细信息查看")
     @GetMapping("task")
-    public Result<?> realProcessTask(String constructionCode,Integer nodeCode) {
+    public Result<?> realProcessTask(String constructionCode,String nodeCode) {
 
         List<WorkflowRealTaskProgress> workflowRealTaskProgress = iWorkflowRealInfoService.realProcessTask(constructionCode,nodeCode);
         return Result.ok(workflowRealTaskProgress);

@@ -39,6 +39,8 @@ public class WorkflowNodeVo {
     private String constructionCode;
     @ApiModelProperty(value = "项目名称")
     private String constructionName;
+    private Integer status;//是否已经完成 0 未完成 1 已完成
+    private Integer onUsed;// 是否启用 0 否 1 是
 
     private List<WorkflowRealTaskProgress> workflowTaskList;
 

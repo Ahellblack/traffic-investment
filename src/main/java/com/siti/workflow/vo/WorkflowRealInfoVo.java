@@ -35,15 +35,17 @@ public class WorkflowRealInfoVo {
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
   @ApiModelProperty(value = "进入当前节点时间")
-  private java.sql.Timestamp insideTime;
+  private String insideTime;
   @ApiModelProperty(value = "最后截止时间")
-  private java.sql.Timestamp finalTime;
+  private String finalTime;
   @ApiModelProperty(value = "实际完成时间")
-  private java.sql.Timestamp finishTime;
+  private String finishTime;
   @ApiModelProperty(value = "任务负责人id")
   private long approvalUserId;
   @ApiModelProperty(value = "任务负责人名称")
   private String approvalUserName;
+  @ApiModelProperty(value = "是否已经完成 0 未完成 1 已完成")
+  private Integer status;
 
   private List<WorkflowRealTaskProgress> taskProgressList;
 }

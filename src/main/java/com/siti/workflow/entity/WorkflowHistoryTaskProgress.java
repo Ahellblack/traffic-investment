@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -27,11 +29,11 @@ public class WorkflowHistoryTaskProgress {
   @ApiModelProperty(value = "任务描述")
   private String taskDesc;
   @ApiModelProperty(value = "进入任务时间")
-  private java.sql.Timestamp initialTime;
+  private String initialTime;
   @ApiModelProperty(value = "规定任务完成时间")
-  private java.sql.Timestamp finalTime;
+  private String finalTime;
   @ApiModelProperty(value = "实际任务结束时间")
-  private java.sql.Timestamp finishTime;
+  private String finishTime;
   @ApiModelProperty(value = "完成用户id")
   private long finishUserId;
   @ApiModelProperty(value = "完成用户人姓名")

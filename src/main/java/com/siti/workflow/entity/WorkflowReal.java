@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class WorkflowReal {
 
     private String sheetCode;
-    private String sheetName;
     private String workflowCode;
     private String workflowName;
     private String workflowDesc;
@@ -26,5 +25,5 @@ public class WorkflowReal {
     private Integer updateBy;
     private String constructionCode;
     private String constructionName;
-
+    private String status;
 }
