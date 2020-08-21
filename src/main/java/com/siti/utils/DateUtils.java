@@ -171,6 +171,27 @@ public class DateUtils extends PropertyEditorSupport {
         }
         return null;
     }
+    /**
+     * 字符串转换成日期
+     *
+     * @param str
+     * @return
+     */
+    public static Date str2Date2(String str) {
+        if (null == str || "".equals(str)) {
+            return null;
+        }
+        Date date = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            date = sdf.parse(str);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /**
      * 日期转换为字符串

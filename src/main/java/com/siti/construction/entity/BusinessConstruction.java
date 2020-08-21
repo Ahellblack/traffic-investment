@@ -1,5 +1,6 @@
 package com.siti.construction.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.Date;
 @TableName("business_construction")
 public class BusinessConstruction {
 
+    @TableId(value = "construction_code")
     @ApiModelProperty(value = "工程编号")
     private String constructionCode;
     @ApiModelProperty(value = "工程名称")
