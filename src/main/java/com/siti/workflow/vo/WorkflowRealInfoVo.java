@@ -31,7 +31,7 @@ public class WorkflowRealInfoVo {
   @ApiModelProperty(value = "流程状态")
   private String workflowStatus;
   @ApiModelProperty(value = "节点描述")
-  private String nodeDesc;
+  private  String description;
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
   @ApiModelProperty(value = "进入当前节点时间")

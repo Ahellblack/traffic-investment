@@ -23,7 +23,7 @@ public class WorkflowNodeVo {
     private String nodeName;
     private String nodeLevel;
     private String parentPath;
-    private String descr;
+    private  String description;
     private long updateBy;
     private java.sql.Timestamp updateTime;
     private long sort;

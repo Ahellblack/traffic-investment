@@ -46,29 +46,29 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
     @Override
     public List<WorkflowRealInfoVo> realProcessInfo(String constructionCode) {
         List<WorkflowRealInfoVo> infoVos = workflowRealInfoMapper.getRealWorkflowByConstructionCode(constructionCode);
-        if (infoVos != null)
+        if (infoVos != null && (!infoVos.isEmpty())) {
             infoVos.forEach(realinfo -> {
 
                 List<WorkflowRealTaskProgress> workflowRealTaskProgresses = workflowRealInfoMapper.realProcessTaskBySheetCode(realinfo.getSheetCode(), realinfo.getNodeCode());
                 realinfo.setTaskProgressList(workflowRealTaskProgresses);
                 Integer status = realinfo.getStatus();
-                if(status!=1){
-                    Map<String, String> tmap = workflowRealTaskProgresses.stream().filter(data->data.getFinalTime()!=null)
+                if (status != 1) {
+                    Map<String, String> tmap = workflowRealTaskProgresses.stream().filter(data -> data.getFinalTime() != null)
                             // java 8 stream Collectors.toMap 当value为空会报空指针，属于jdk8的bug 解决方式
                             //.collect(Collectors.toMap(WorkflowRealTaskProgress::getFinalTime, WorkflowRealTaskProgress::getFinishTime));
-                    .collect(HashMap::new, (m, v)->m.put(v.getFinalTime(), v.getFinishTime()), HashMap::putAll);
+                            .collect(HashMap::new, (m, v) -> m.put(v.getFinalTime(), v.getFinishTime()), HashMap::putAll);
                     /*tmap.forEach((finalTime,finishTime)->{
                         DateUtils.str2Date2(finalTime).after(new Date());  Integer newStatus = 3;
                     });*/
-                    for(String finalTime:tmap.keySet()){
+                    for (String finalTime : tmap.keySet()) {
                         //若计划时间未填写 默认状态为0 未开始
-                        if(finalTime==null && finalTime== ""){
+                        if (finalTime == null && finalTime == "") {
                             break;
                         }
                         Date finaldate = DateUtils.str2Date2(finalTime);
-                        if(finaldate.after(new Date())){
+                        if (finaldate.after(new Date())) {
                             // 未完成节点若时间超过当前时间 设置为逾期
-                            if(tmap.get(finalTime)==null || finaldate.after(new Date())){
+                            if (tmap.get(finalTime) == null || finaldate.after(new Date())) {
                                 realinfo.setStatus(3);
                                 break;
                             }
@@ -76,7 +76,9 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                     }
                 }
             });
-        return infoVos;
+            return infoVos;
+        }
+        return null;
     }
 
     @Override
@@ -116,19 +118,21 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                         List<WorkflowRealTaskProgress> workflowTaskList = nodevo.getWorkflowTaskList();
                         List<Date> el = new ArrayList<>();
                         List<Integer> taskStatusList = new ArrayList<>();
-                        for (WorkflowRealTaskProgress task : workflowTaskList) {
-                            WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
-                            if (rtask.getFinishTime() != null && rtask.getInsideTime() != null) {
-                                task.setStatus(1);
-                            } else {
-                                task.setStatus(0);
+                        if (workflowTaskList != null && workflowTaskList.size() != 0) {
+                            for (WorkflowRealTaskProgress task : workflowTaskList) {
+                                WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
+                                if (rtask.getFinishTime() != null && rtask.getInsideTime() != null) {
+                                    task.setStatus(1);
+                                } else {
+                                    task.setStatus(0);
+                                }
+                                //所有task完成状态集合
+                                taskStatusList.add(task.getStatus());
+                                BeanUtils.copyProperties(task, rtask);
+                                iWorkflowRealTaskProgressService.updateById(rtask);
+                                el.add(DateUtils.str2Date(task.getInitialTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                                el.add(DateUtils.str2Date(task.getFinalTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
                             }
-                            //所有task完成状态集合
-                            taskStatusList.add(task.getStatus());
-                            BeanUtils.copyProperties(task, rtask);
-                            iWorkflowRealTaskProgressService.updateById(rtask);
-                            el.add(DateUtils.str2Date(task.getInitialTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                            el.add(DateUtils.str2Date(task.getFinalTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
                         }
                         //-------- 编辑流程实时表---------//
                         Integer nodeStatus = 0;

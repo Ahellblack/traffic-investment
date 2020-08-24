@@ -28,7 +28,7 @@ public class WorkflowRealInfo {
   @ApiModelProperty(value = "流程状态")
   private String workflowStatus;
   @ApiModelProperty(value = "节点描述")
-  private String nodeDesc;
+  private  String description;
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
   @ApiModelProperty(value = "初始时间")
@@ -45,7 +45,7 @@ public class WorkflowRealInfo {
   @ApiModelProperty(value = "任务负责人名称")
   private String approvalUserName;
   @ApiModelProperty(value = "是否已完成 0 未完成 1 已完成")
-  private int status;
+  private Integer status;//是否已经完成 0 未完成 1 已完成
   private Integer onUsed;// 是否启用 0 否 1 是
 
 }

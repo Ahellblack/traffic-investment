@@ -28,6 +28,7 @@ public class Workflow {
   private String update_time;
   @ApiModelProperty(value = "更新人")
   private String update_by;
-
+  @ApiModelProperty(value = "类型 1前期 2工程")
+  private int type;
 
 }

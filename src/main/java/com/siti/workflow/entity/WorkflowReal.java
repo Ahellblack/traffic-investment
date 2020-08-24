@@ -1,5 +1,6 @@
 package com.siti.workflow.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +27,6 @@ public class WorkflowReal {
     private String constructionCode;
     private String constructionName;
     private String status;
+    @ApiModelProperty(value = "类型 1前期 2工程")
+    private int type;
 }

@@ -19,7 +19,7 @@ public class WorkflowTask {
     @ApiModelProperty(value = "任务名")
     private String taskName;
     @ApiModelProperty(value = "任务描述")
-    private String taskDesc;
+    private  String description;
     @ApiModelProperty(value = "流程号")
     private String workflowCode;
     @ApiModelProperty(value = "节点号")

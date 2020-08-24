@@ -1,6 +1,5 @@
 package com.siti.workflow.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +25,7 @@ public class WorkflowRealTaskProgress {
   @ApiModelProperty(value = "任务名称")
   private String taskName;
   @ApiModelProperty(value = "任务描述")
-  private String taskDesc;
+  private  String description;
   @ApiModelProperty(value = "初始时间")
   private String initialTime;
   @ApiModelProperty(value = "最后截止时间")

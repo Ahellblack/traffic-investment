@@ -23,7 +23,7 @@ public class WorkflowNode {
   @ApiModelProperty(value = "父级节点")
   private String parentPath;
   @ApiModelProperty(value = "描述")
-  private String descr;
+  private  String description;
   @ApiModelProperty(value = "修改人")
   private long updateBy;
   @ApiModelProperty(value = "修改日期")
