@@ -21,8 +21,8 @@ spring:
       max-request-size: 10MB
   datasource:
     url: jdbc:mysql://10.1.30.204:3306/traffic_invest?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false
-    username: root
-    password: 123
+    username: dev
+    password: Dev@123
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       stat-view-servlet:
@@ -110,7 +110,7 @@ spring:
         max-wait: -1ms  #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
         min-idle: 0     #最小等待连接中的数量,设 0 为没有限制
       shutdown-timeout: 100ms
-    password: ''
+    password: 123456
     port: 6379
 #mybatis plus 设置
 mybatis-plus:

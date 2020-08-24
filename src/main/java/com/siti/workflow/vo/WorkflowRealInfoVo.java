@@ -46,6 +46,7 @@ public class WorkflowRealInfoVo {
   private String approvalUserName;
   @ApiModelProperty(value = "是否已经完成 0 未完成 1 已完成")
   private Integer status;
+  private Integer onUsed;// 是否启用 0 否 1 是
 
   private List<WorkflowRealTaskProgress> taskProgressList;
 }

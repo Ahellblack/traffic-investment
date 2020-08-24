@@ -14,12 +14,12 @@ import java.util.List;
  */
 public interface WorkflowRealInfoMapper extends BaseMapper<WorkflowRealInfo> {
 
-    @Select("SELECT\n" +
-            "\t* \n" +
-            "FROM\n" +
-            "\t( SELECT * FROM workflow_real WHERE construction_code = #{constructionCode} ORDER BY create_time desc limit 1) wr\n" +
-            "\tLEFT JOIN workflow_real_info wri ON wr.sheet_code = wri.sheet_code \n" +
-            "\tAND wr.type = 1 ")
+    @Select("SELECT " +
+            " wri.*  " +
+            "FROM " +
+            " ( SELECT * FROM workflow_real WHERE construction_code = #{constructionCode} ORDER BY create_time desc limit 1) wr " +
+            " LEFT JOIN workflow_real_info wri ON wr.sheet_code = wri.sheet_code  " +
+            " AND wr.type = 1 ")
     List<WorkflowRealInfoVo> getRealWorkflowByConstructionCode(@Param("constructionCode")String constructionCode);
 
     @Select("<script>SELECT * FROM `workflow_real_task_progress` wrtp " +

@@ -8,6 +8,8 @@ import com.siti.common.Result;
 import com.siti.common.constant.CommonConstant;
 import com.siti.construction.entity.BusinessConstruction;
 import com.siti.construction.service.IConstructionService;
+import com.siti.workflow.service.IWorkflowNodeService;
+import com.siti.workflow.vo.WorkflowNodeVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by 12293 on 2020/8/7.
@@ -25,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "项目列表")
 public class ConstructionController {
 
+    @Resource
+    IWorkflowNodeService iWorkflowNodeService;
     @Resource
     IConstructionService iConstructionService;
 
@@ -42,11 +47,11 @@ public class ConstructionController {
                           HttpServletRequest req) {
         QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("construction_code");
-        if(status!=null) {
+        if (status != null) {
             queryWrapper.eq("status", status);
         }
-        if(year!=null && year != ""){
-            queryWrapper.likeLeft("initial_time",year);
+        if (year != null && year != "") {
+            queryWrapper.likeLeft("initial_time", year);
         }
         Page<BusinessConstruction> page = new Page<>(pageNo, pageSize);
         //List<BusinessConstruction> list = iConstructionService.list(queryWrapper);
@@ -89,8 +94,19 @@ public class ConstructionController {
                 .append("PDJT")
                 .append("-").append((int) ((Math.random() * 9 + 1) * 100000)).toString();
         BusinessConstruction.setConstructionCode(constructionCode);
-        iConstructionService.save(BusinessConstruction);
-        return Result.ok("添加成功！",constructionCode);
+        //根据项目流程号生成流程节点
+        try {
+            if (BusinessConstruction.getType() != null) {
+                List<WorkflowNodeVo> workflowNodeVos = iWorkflowNodeService.allWorkflowNodeConfig(BusinessConstruction.getType());
+                iWorkflowNodeService.createRealWorkflow(workflowNodeVos, constructionCode);
+            }else {
+                return Result.error(500, "新增的项目出错，检查参数");
+            }
+            iConstructionService.save(BusinessConstruction);
+        } catch (Exception e) {
+            return Result.error(500, "新增的项目异常");
+        }
+        return Result.ok("添加并生成流程节点成功！", constructionCode);
     }
 
     /**

@@ -53,17 +53,26 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                 realinfo.setTaskProgressList(workflowRealTaskProgresses);
                 Integer status = realinfo.getStatus();
                 if(status!=1){
-                    Map<String, String> tmap = workflowRealTaskProgresses.stream()
-                            .collect(Collectors.toMap(WorkflowRealTaskProgress::getFinalTime, WorkflowRealTaskProgress::getFinishTime));
+                    Map<String, String> tmap = workflowRealTaskProgresses.stream().filter(data->data.getFinalTime()!=null)
+                            // java 8 stream Collectors.toMap 当value为空会报空指针，属于jdk8的bug 解决方式
+                            //.collect(Collectors.toMap(WorkflowRealTaskProgress::getFinalTime, WorkflowRealTaskProgress::getFinishTime));
+                    .collect(HashMap::new, (m, v)->m.put(v.getFinalTime(), v.getFinishTime()), HashMap::putAll);
                     /*tmap.forEach((finalTime,finishTime)->{
                         DateUtils.str2Date2(finalTime).after(new Date());  Integer newStatus = 3;
                     });*/
                     for(String finalTime:tmap.keySet()){
-                        if(DateUtils.str2Date2(finalTime).after(new Date()) && tmap.get(finalTime)==null){
-                            realinfo.setStatus(3);
+                        //若计划时间未填写 默认状态为0 未开始
+                        if(finalTime==null && finalTime== ""){
                             break;
                         }
-
+                        Date finaldate = DateUtils.str2Date2(finalTime);
+                        if(finaldate.after(new Date())){
+                            // 未完成节点若时间超过当前时间 设置为逾期
+                            if(tmap.get(finalTime)==null || finaldate.after(new Date())){
+                                realinfo.setStatus(3);
+                                break;
+                            }
+                        }
                     }
                 }
             });
