@@ -57,17 +57,7 @@ spring:
         # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
         connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
 
-  mail:
-    host: smtp.163.com
-    username: jeecgos@163.com
-    password: ??
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
+
   ## quartz定时任务,采用数据库方式
   quartz:
     job-store-type: jdbc
@@ -145,12 +135,12 @@ siti:
   shiro:
      excludeUrls: /test/demo/demo3,/test/demo/redisDemo/**
   #阿里云oss存储配置
-  oss:
-    endpoint: oss-cn-beijing.aliyuncs.com
-    accessKey: WegDpuKzOuPK6D3N
-    secretKey: ??
-    bucketName: jeecgos
-    staticDomain: ??
+  #oss:
+  #  endpoint: oss-cn-beijing.aliyuncs.com
+  #  accessKey: WegDpuKzOuPK6D3N
+  #  secretKey: ??
+  #  bucketName: jeecgos
+  #  staticDomain: ??
   # ElasticSearch 设置
   elasticsearch:
     cluster-name: docker-cluster
@@ -182,3 +172,5 @@ swagger: ## 开启Swagger的Basic认证功能,默认是false
     username: zyw
 ## Basic认证密码
     password: 123
+
+

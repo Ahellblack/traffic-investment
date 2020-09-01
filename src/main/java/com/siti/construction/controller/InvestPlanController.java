@@ -1,8 +1,6 @@
 package com.siti.construction.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.siti.common.AutoLog;
 import com.siti.common.Result;
 import com.siti.common.constant.CommonConstant;
@@ -14,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -35,15 +32,11 @@ public class InvestPlanController {
      *
      * @param year               年月 YYYY-MM
      * @param constructionCode
-     * @param pageNo
-     * @param pageSize
-     * @param req
      * @return
      */
     @ApiOperation(value = "获取年度计划列表", notes = "获取年度计划列表")
     @GetMapping(value = "/list")
-    public Result<?> list(String year, String constructionCode, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
-                          HttpServletRequest req) {
+    public Result<?> list(String year, String constructionCode,String type) {
         QueryWrapper<BusinessInvestPlan> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("construction_code", constructionCode)
                 .orderByAsc("ym")
@@ -51,12 +44,10 @@ public class InvestPlanController {
         if (year != "" && year !=null) {
             queryWrapper.like("ym", year);
         }
-        Page<BusinessInvestPlan> page = new Page<>(pageNo, pageSize);
-        IPage<BusinessInvestPlan> pageList = iInvestPlanService.page(page, queryWrapper);
-        log.info("查询当前页：" + pageList.getCurrent());
-        log.info("查询当前页数量：" + pageList.getSize());
-        log.info("查询结果数量：" + pageList.getRecords().size());
-        log.info("数据总数：" + pageList.getTotal());
+        if (type != "" && type !=null) {
+            queryWrapper.like("type", type);
+        }
+        List<BusinessInvestPlan> pageList = iInvestPlanService.list(queryWrapper);
         return Result.ok(pageList);
     }
 

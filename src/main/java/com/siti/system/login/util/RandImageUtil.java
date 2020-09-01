@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class RandImageUtil {
 
-    public static final String key = "JEECG_LOGIN_KEY";
+    public static final String key = "LOGIN_KEY";
 
     /**
      * 定义图形大小

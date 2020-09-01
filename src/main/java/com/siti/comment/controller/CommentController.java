@@ -32,4 +32,7 @@ public class CommentController {
         List<CommentTopicVo> commentTopicVos = icommentService.allComment();
         return Result.ok(commentTopicVos);
     }
+
+
+
 }

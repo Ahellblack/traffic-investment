@@ -58,27 +58,28 @@ public class InvestPlanServiceImpl extends ServiceImpl<InvestPlanMapper, Busines
 
     public Map<String, Set<String>> contentMapWihtProgress(List<WorkflowRealTaskProgress> workflowRealTaskProgresses, BusinessConstruction construction) {
         if (workflowRealTaskProgresses.size() > 0 && workflowRealTaskProgresses.get(0).getConstructionCode() != "") {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+            //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
             Map<String, Set<String>> map = new HashMap<>();
             workflowRealTaskProgresses.stream().filter(data -> Optional.ofNullable(data.getTaskName()).get() != "").forEach(data -> {
-
-                Date finalTime = DateUtils.str2Date(data.getFinalTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                Date initialTime = DateUtils.str2Date(data.getInitialTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                String name = data.getTaskName();
-                Set<String> stringSet = Optional.ofNullable(map.get(DateUtils.formatDateYearMonth(initialTime)))
-                        .orElse(new HashSet<>());
-                stringSet.add(name);
-                map.put(DateUtils.formatDateYearMonth(initialTime), stringSet);
-                //起始时间与结束时间年月不同
-                if (DateUtils.getMonth(finalTime) != DateUtils.getMonth(initialTime)
-                        && DateUtils.getYear(finalTime) != DateUtils.getYear(initialTime)) {
-                    stringSet = map.get(DateUtils.formatDateYearMonth(finalTime));
+                if(data.getInitialTime()!=null && data.getFinalTime()!=null) {
+                    Date finalTime = DateUtils.str2Date2(data.getFinalTime());
+                    Date initialTime = DateUtils.str2Date2(data.getInitialTime());
+                    String name = data.getTaskName();
+                    Set<String> stringSet = Optional.ofNullable(map.get(DateUtils.formatDateYearMonth(initialTime)))
+                            .orElse(new HashSet<>());
                     stringSet.add(name);
-                    map.put(DateUtils.formatDateYearMonth(finalTime), stringSet);
+                    map.put(DateUtils.formatDateYearMonth(initialTime), stringSet);
+                    //起始时间与结束时间年月不同
+                    if (DateUtils.getMonth(finalTime) != DateUtils.getMonth(initialTime)
+                            && DateUtils.getYear(finalTime) != DateUtils.getYear(initialTime)) {
+                        stringSet = map.get(DateUtils.formatDateYearMonth(finalTime));
+                        stringSet.add(name);
+                        map.put(DateUtils.formatDateYearMonth(finalTime), stringSet);
+                    }
                 }
             });
-            //生成中间月份
-            List<String> list = innerYearMonth(simpleDateFormat.format(construction.getInitialTime()), simpleDateFormat.format(construction.getFinalTime()));
+            //生成中间月份 #TODO 把日月的格式修改为YYYY-MM
+            List<String> list = innerYearMonth(construction.getInitialTime(),construction.getFinalTime());
             list.removeAll(map.keySet());
             list.forEach(ym -> {
                 HashSet<String> objects = new HashSet<>();
@@ -88,14 +89,22 @@ public class InvestPlanServiceImpl extends ServiceImpl<InvestPlanMapper, Busines
             //录入年度计划配置
             map.forEach((key, value) -> {
                 String content = StringUtils.join(value.toArray(), ",");
+                String ccode0 = workflowRealTaskProgresses.get(0).getConstructionCode();
+                Integer type0 = workflowRealTaskProgresses.get(0).getType();
                 BusinessInvestPlan plan = BusinessInvestPlan.builder()
                         .ym(key).content(content)
-                        .constructionCode(workflowRealTaskProgresses.get(0).getConstructionCode())
+                        .constructionCode(ccode0)
                         .createTime(new Timestamp(System.currentTimeMillis()))
-                        .type(workflowRealTaskProgresses.get(0).getType()).build();
-                investPlanMapper.insert(plan);
+                        .type(type0).build();
+                BusinessInvestPlan findPlan = investPlanMapper.getByYmAndConstructionCode(key,ccode0,type0);
+                if(findPlan!=null){
+                    investPlanMapper.updateByYm(plan);
+                }else{
+                    investPlanMapper.insert(plan);
+                }
+
             });
-            System.out.println(map);
+            //System.out.println(map);
             return map;
         }
         return new HashMap<>();
@@ -166,9 +175,9 @@ public class InvestPlanServiceImpl extends ServiceImpl<InvestPlanMapper, Busines
 
             // 所有的月份已经准备好
             //System.out.println(list);
-            for (int i = 0; i < list.size(); i++) {
+           /* for (int i = 0; i < list.size(); i++) {
                 System.out.println(list.get(i));
-            }
+            }*/
             return list;
         } catch (Exception e) {
             e.printStackTrace();

@@ -183,7 +183,7 @@ public class DateUtils extends PropertyEditorSupport {
         }
         Date date = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             date = sdf.parse(str);
             return date;
         } catch (ParseException e) {
@@ -201,6 +201,20 @@ public class DateUtils extends PropertyEditorSupport {
      */
     public static String date2Str(SimpleDateFormat date_sdf) {
         Date date = getDate();
+        if (null == date) {
+            return null;
+        }
+        return date_sdf.format(date);
+    }
+
+    /**
+     * 日期转换为字符串
+     *
+     * @return 字符串
+     */
+    public static String date2Str2(Date date) {
+        SimpleDateFormat date_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         if (null == date) {
             return null;
         }

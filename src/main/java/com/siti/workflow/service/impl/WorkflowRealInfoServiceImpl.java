@@ -2,6 +2,8 @@ package com.siti.workflow.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.siti.common.vo.LoginUser;
+import com.siti.construction.entity.BusinessConstruction;
+import com.siti.construction.service.IConstructionService;
 import com.siti.utils.DateUtils;
 import com.siti.workflow.entity.Workflow;
 import com.siti.workflow.entity.WorkflowRealInfo;
@@ -12,7 +14,6 @@ import com.siti.workflow.service.IWorkflowRealInfoService;
 import com.siti.workflow.service.IWorkflowRealService;
 import com.siti.workflow.service.IWorkflowRealTaskProgressService;
 import com.siti.workflow.service.IWorkflowService;
-import com.siti.workflow.vo.WorkflowNodeVo;
 import com.siti.workflow.vo.WorkflowRealInfoVo;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,8 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
     WorkflowRealInfoMapper workflowRealInfoMapper;
     @Resource
     WorkflowNodeMapper workflowNodeMapper;
-
+    @Resource
+    IConstructionService iConstructionService;
     @Resource
     IWorkflowService iWorkflowService;
     @Resource
@@ -67,7 +67,7 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                         }
                         Date finaldate = DateUtils.str2Date2(finalTime);
                         if (finaldate.after(new Date())) {
-                            // 未完成节点若时间超过当前时间 设置为逾期
+                            // 未完成节点若时间超过当前时间 设置为逾期 #TODO 状态的判断
                             if (tmap.get(finalTime) == null || finaldate.after(new Date())) {
                                 realinfo.setStatus(3);
                                 break;
@@ -92,13 +92,18 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
      */
     @Transactional
     @Override
-    public boolean updateRealInfo(List<WorkflowNodeVo> workflowNodeVos) {
+    public boolean updateRealInfo(List<WorkflowRealInfoVo> workflowNodeVos) {
+        //TODO 添加权限
         LoginUser user = (LoginUser) SecurityUtils.getSubject().getPrincipal();
         Workflow workflow = new Workflow();
         if (workflowNodeVos.size() > 0 /*&& oConvertUtils.isEmpty(workflowNodeVos.get(0))*/) {
             workflow = iWorkflowService.getByKey(workflowNodeVos.get(0).getWorkflowCode());
-        }
-        //----------提交主体----------//
+            String constructionCode = workflowNodeVos.get(0).getConstructionCode();
+            if (constructionCode == null) {
+                return false;
+            }
+
+            //----------提交主体----------//
         /*WorkflowReal workflowReal = WorkflowReal.builder().createBy(user.getId()).updateBy(user.getId())
                 .createTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss")))
                 .updateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"))).build();
@@ -109,62 +114,115 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
         workflowReal.setSheetCode(sheetCode);
 
         boolean saveW = iWorkflowRealService.updateById(workflowReal);*/
-        boolean saveWN = true;
-        try {
-            workflowNodeVos.stream()
-                    //.filter(data -> data.getWorkflowTaskList().size() != 0)
-                    .forEach(nodevo -> {
-                        //----------编辑任务明细表-----------//
-                        List<WorkflowRealTaskProgress> workflowTaskList = nodevo.getWorkflowTaskList();
-                        List<Date> el = new ArrayList<>();
-                        List<Integer> taskStatusList = new ArrayList<>();
-                        if (workflowTaskList != null && workflowTaskList.size() != 0) {
-                            for (WorkflowRealTaskProgress task : workflowTaskList) {
-                                WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
-                                if (rtask.getFinishTime() != null && rtask.getInsideTime() != null) {
-                                    task.setStatus(1);
-                                } else {
-                                    task.setStatus(0);
+            boolean saveWN = true;
+            try {
+                workflowNodeVos.stream()
+                        //.filter(data -> data.getWorkflowTaskList().size() != 0)
+                        .forEach(nodevo -> {
+                            //----------编辑任务明细表-----------//
+                            List<WorkflowRealTaskProgress> workflowTaskList = nodevo.getTaskProgressList();
+                            List<Date> el = new ArrayList<>();
+
+                            List<Date> initialel = new ArrayList<>();
+                            List<Date> finalel = new ArrayList<>();
+
+                            List<Date> insideel = new ArrayList<>();
+                            List<Date> finishel = new ArrayList<>();
+
+                            List<Integer> taskStatusList = new ArrayList<>();
+                            if (workflowTaskList != null && workflowTaskList.size() != 0) {
+                                for (WorkflowRealTaskProgress task : workflowTaskList) {
+                                    WorkflowRealTaskProgress rtask = new WorkflowRealTaskProgress();
+                                    if (task.getFinishTime() != null && task.getInsideTime() != null) {
+                                        task.setStatus(1);
+                                    } else {
+                                        task.setStatus(0);
+                                    }
+                                    //所有task完成状态集合
+                                    taskStatusList.add(task.getStatus());
+                                    BeanUtils.copyProperties(task, rtask);
+                                    iWorkflowRealTaskProgressService.updateById(rtask);
+                                    initialel.add(DateUtils.str2Date2(task.getInitialTime()));
+                                    finalel.add(DateUtils.str2Date2(task.getFinalTime()));
+                                    insideel.add(DateUtils.str2Date2(task.getInsideTime()));
+                                    finishel.add(DateUtils.str2Date2(task.getFinishTime()));
                                 }
-                                //所有task完成状态集合
-                                taskStatusList.add(task.getStatus());
-                                BeanUtils.copyProperties(task, rtask);
-                                iWorkflowRealTaskProgressService.updateById(rtask);
-                                el.add(DateUtils.str2Date(task.getInitialTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                                el.add(DateUtils.str2Date(task.getFinalTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
                             }
-                        }
-                        //-------- 编辑流程实时表---------//
-                        Integer nodeStatus = 0;
-                        if (taskStatusList.size() != 0) {
-                            boolean flag1 = taskStatusList.stream().allMatch(data -> data == 1);
-                            boolean flag2 = taskStatusList.stream().allMatch(data -> data == 0);
-                            if (flag1) {
-                                nodeStatus = 1;
-                            } else if (flag2) {
-                                nodeStatus = 0;
-                            } else {
-                                nodeStatus = 2;
+                            //-------- 编辑流程实时表---------//
+                            Integer nodeStatus = 0;
+                            if (taskStatusList.size() != 0) {
+                                boolean flag1 = taskStatusList.stream().allMatch(data -> data == 1);
+                                boolean flag2 = taskStatusList.stream().allMatch(data -> data == 0);
+                                if (flag1) {
+                                    nodeStatus = 1;
+                                } else if (flag2) {
+                                    nodeStatus = 0;
+                                } else {
+                                    nodeStatus = 2;
+                                }
                             }
-                        }
-                        nodevo.setStatus(nodeStatus);
-                        WorkflowRealInfo node = new WorkflowRealInfo();
-                        BeanUtils.copyProperties(nodevo, node);
-                        //自然排序时间 取最小及最大时间生成node
-                        el.removeAll(Collections.singleton(null));
-                        if (el.size() > 0) {
-                            List<Date> collect = el.stream().sorted().collect(Collectors.toList());
-                            node.setInitialTime(DateUtils.timestamptoStr(new Timestamp(collect.get(0).getTime())));
-                            node.setFinalTime(DateUtils.timestamptoStr(new Timestamp(collect.get(collect.size() - 1).getTime())));
-                        }
-                        this.updateById(node);
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-            saveWN = false;
-        }
-        if (saveWN) {
-            return true;
+                            nodevo.setStatus(nodeStatus);
+                            WorkflowRealInfo node = new WorkflowRealInfo();
+                            BeanUtils.copyProperties(nodevo, node);
+
+                            // 取最小及最大时间生成node
+                            //去null元素
+                            initialel.removeAll(Collections.singleton(null));
+                            if (initialel.size() > 0) {
+                                //自然排序时间
+                                List<Date> collect = initialel.stream().sorted().collect(Collectors.toList());
+                                node.setInitialTime(DateUtils.date2Str2(collect.get(0)));
+                                //node.setFinalTime(DateUtils.date2Str2(collect.get(collect.size() - 1)));
+                            }
+                            finalel.removeAll(Collections.singleton(null));
+                            if (finalel.size() > 0) {
+                                //自然排序时间
+                                List<Date> collect = finalel.stream().sorted().collect(Collectors.toList());
+                                //node.setInitialTime(DateUtils.date2Str2(collect.get(0)));
+                                node.setFinalTime(DateUtils.date2Str2(collect.get(collect.size() - 1)));
+                            }
+                            insideel.removeAll(Collections.singleton(null));
+                            if (insideel.size() > 0) {
+                                //自然排序时间
+                                List<Date> collect = insideel.stream().sorted().collect(Collectors.toList());
+                                node.setInsideTime(DateUtils.date2Str2(collect.get(0)));
+                                //node.setFinalTime(DateUtils.date2Str2(collect.get(collect.size() - 1)));
+                            }
+                            finishel.removeAll(Collections.singleton(null));
+                            if (finishel.size() > 0) {
+                                //自然排序时间
+                                List<Date> collect = finishel.stream().sorted().collect(Collectors.toList());
+                                //node.setInitialTime(DateUtils.date2Str2(collect.get(0)));
+                                node.setFinishTime(DateUtils.date2Str2(collect.get(collect.size() - 1)));
+                            }
+                            this.updateById(node);
+                        });
+
+                List<WorkflowRealTaskProgress> workflowRealTaskProgresses = realProcessTask(constructionCode, null);
+                //根据任务完成情况设置项目状态
+                boolean a = workflowRealTaskProgresses.stream().allMatch(data -> data.getStatus() == 1);
+                boolean b = workflowRealTaskProgresses.stream().allMatch(data -> data.getStatus() == 0);
+                BusinessConstruction construction = iConstructionService.getById(constructionCode);
+               /* UpdateWrapper<BusinessConstruction> wrapper = new UpdateWrapper();
+                wrapper.set("construction_code",constructionCode);*/
+                if (a) {
+                    construction.setStatus(2);
+                } else if (b) {
+                    construction.setStatus(0);
+                } else {
+                    construction.setStatus(1);
+                }
+                iConstructionService.updateById(construction);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                saveWN = false;
+            }
+            if (saveWN) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

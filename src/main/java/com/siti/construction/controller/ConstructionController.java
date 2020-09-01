@@ -6,8 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.siti.common.AutoLog;
 import com.siti.common.Result;
 import com.siti.common.constant.CommonConstant;
+import com.siti.common.vo.LoginUser;
 import com.siti.construction.entity.BusinessConstruction;
 import com.siti.construction.service.IConstructionService;
+import com.siti.system.ctrl.LoginCtrl;
+import com.siti.system.login.entity.SysUser;
+import com.siti.system.login.service.ISysUserService;
+import com.siti.utils.DateUtils;
 import com.siti.workflow.service.IWorkflowNodeService;
 import com.siti.workflow.vo.WorkflowNodeVo;
 import io.swagger.annotations.Api;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +38,10 @@ public class ConstructionController {
     IWorkflowNodeService iWorkflowNodeService;
     @Resource
     IConstructionService iConstructionService;
+    @Resource
+    LoginCtrl loginCtrl;
+    @Resource
+    ISysUserService iSysUserService;
 
     /**
      * 分页列表查询
@@ -51,7 +61,7 @@ public class ConstructionController {
             queryWrapper.eq("status", status);
         }
         if (year != null && year != "") {
-            queryWrapper.likeLeft("initial_time", year);
+            queryWrapper.like("initial_time", year);
         }
         Page<BusinessConstruction> page = new Page<>(pageNo, pageSize);
         //List<BusinessConstruction> list = iConstructionService.list(queryWrapper);
@@ -76,6 +86,8 @@ public class ConstructionController {
         QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("construction_code", constructionCode);
         BusinessConstruction construction = iConstructionService.getOne(queryWrapper);
+        construction.setStartTime(construction.getInitialTime());
+        construction.setEndTime( (new Date().before(DateUtils.str2Date2(construction.getFinalTime())))? construction.getFinalTime(): DateUtils.date2Str2(new Date()));
         return Result.ok(construction);
     }
 
@@ -93,13 +105,20 @@ public class ConstructionController {
         String constructionCode = new StringBuilder(System.currentTimeMillis() / 1000 + "")
                 .append("PDJT")
                 .append("-").append((int) ((Math.random() * 9 + 1) * 100000)).toString();
+        int id = loginCtrl.getLoginUserInfo().getId();
         BusinessConstruction.setConstructionCode(constructionCode);
+        SysUser pm = iSysUserService.getById(BusinessConstruction.getPmId());
+        SysUser enginPm = iSysUserService.getById(BusinessConstruction.getEnginPmId());
+        BusinessConstruction.setEnginPm(enginPm.getRealname());
+        BusinessConstruction.setPm(pm.getRealname());
+        BusinessConstruction.setUpdateBy(id+"");
+        BusinessConstruction.setCreateBy(id+"");
         //根据项目流程号生成流程节点
         try {
             if (BusinessConstruction.getType() != null) {
                 List<WorkflowNodeVo> workflowNodeVos = iWorkflowNodeService.allWorkflowNodeConfig(BusinessConstruction.getType());
                 iWorkflowNodeService.createRealWorkflow(workflowNodeVos, constructionCode);
-            }else {
+            } else {
                 return Result.error(500, "新增的项目出错，检查参数");
             }
             iConstructionService.save(BusinessConstruction);
@@ -119,6 +138,14 @@ public class ConstructionController {
     @ApiOperation(value = "编辑项目信息", notes = "编辑项目信息")
     @AutoLog(value = "编辑项目信息", operateType = CommonConstant.OPERATE_TYPE_3)
     public Result<?> edit(@RequestBody BusinessConstruction BusinessConstruction) {
+        if (BusinessConstruction.getConstructionCode() != null) {
+            com.siti.construction.entity.BusinessConstruction construction = iConstructionService.getById(BusinessConstruction.getConstructionCode());
+            LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
+            if (loginUserInfo.getId() != BusinessConstruction.getPmId()
+                    && loginUserInfo.getId() != BusinessConstruction.getEnginPmId()) {
+                return Result.ok("当前账户无权限操作项目信息");
+            }
+        }
         iConstructionService.updateById(BusinessConstruction);
         return Result.ok("更新成功！");
     }

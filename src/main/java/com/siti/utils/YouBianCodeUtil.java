@@ -35,9 +35,7 @@ public class YouBianCodeUtil {
 			String after_code = code.substring(code.length() - 1 - numLength,code.length());
 			char after_code_zimu = after_code.substring(0, 1).charAt(0);
 			Integer after_code_num = Integer.parseInt(after_code.substring(1));
-//			org.jeecgframework.core.util.LogUtil.info(after_code);
-//			org.jeecgframework.core.util.LogUtil.info(after_code_zimu);
-//			org.jeecgframework.core.util.LogUtil.info(after_code_num);
+
 
 			String nextNum = "";
 			char nextZimu = 'A';

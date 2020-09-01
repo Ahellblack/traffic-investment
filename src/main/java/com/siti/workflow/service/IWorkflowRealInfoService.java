@@ -3,7 +3,6 @@ package com.siti.workflow.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.siti.workflow.entity.WorkflowRealInfo;
 import com.siti.workflow.entity.WorkflowRealTaskProgress;
-import com.siti.workflow.vo.WorkflowNodeVo;
 import com.siti.workflow.vo.WorkflowRealInfoVo;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,5 +18,5 @@ public interface IWorkflowRealInfoService extends IService<WorkflowRealInfo> {
     List<WorkflowRealTaskProgress> realProcessTask(String constructionCode,String nodeCode);
 
     @Transactional
-    boolean updateRealInfo(List<WorkflowNodeVo> workflowNodeVos);
+    boolean updateRealInfo(List<WorkflowRealInfoVo> workflowNodeVos);
 }

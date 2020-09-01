@@ -34,6 +34,8 @@ public class WorkflowRealInfoVo {
   private  String description;
   @ApiModelProperty(value = "节点名称")
   private String nodeName;
+  @ApiModelProperty(value = "计划开始时间")
+  private String initialTime;
   @ApiModelProperty(value = "进入当前节点时间")
   private String insideTime;
   @ApiModelProperty(value = "最后截止时间")

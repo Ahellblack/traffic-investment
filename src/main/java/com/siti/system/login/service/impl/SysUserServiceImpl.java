@@ -262,8 +262,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
 	// 根据角色Id查询
 	@Override
-	public IPage<SysUser> getUserByRoleId(Page<SysUser> page, String roleId, String username) {
-		return sysUserMapper.getUserByRoleId(page,roleId,username);
+	public List<SysUser> getUserByRoleId( String roleId, String realname) {
+		return sysUserMapper.getUserByRoleId(roleId,realname);
 	}
 
 

@@ -16,8 +16,6 @@ public class BusinessInvestPlan {
 
   @ApiModelProperty(value = "工程编号")
   private String constructionCode;
-  @ApiModelProperty(value = "工程名称")
-  private String constructionName;
   @ApiModelProperty(value = "实施月份 YYYY-MM")
   private String ym;
   @ApiModelProperty(value = "实施项目详情")
@@ -33,4 +31,6 @@ public class BusinessInvestPlan {
   private String finishTime;
   @ApiModelProperty(value = "类型 1前期 2工程")
   private int type;
+
+  private String description; //描述
 }

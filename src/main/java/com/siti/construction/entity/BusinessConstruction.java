@@ -1,5 +1,6 @@
 package com.siti.construction.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
@@ -70,6 +71,14 @@ public class BusinessConstruction {
     @ApiModelProperty(value = "财务监管单位")
     private String financeUnit;
 
+    @ApiModelProperty(value = "项目经理id")
+    private Integer pmId;
+    @ApiModelProperty(value = "工程项目经理id")
+    private Integer enginPmId;
 
+    @TableField(exist = false)
+    private String startTime;
+    @TableField(exist = false)
+    private String endTime;
 
 }

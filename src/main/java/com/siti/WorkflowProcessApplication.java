@@ -33,7 +33,7 @@ public class WorkflowProcessApplication extends SpringBootServletInitializer {
 		String port = env.getProperty("server.port");
 		String path = env.getProperty("server.servlet.context-path");
 		log.info("\n----------------------------------------------------------\n\t" +
-				"Application Jeecg-Boot is running! Access URLs:\n\t" +
+				"Application workflow is running! Access URLs:\n\t" +
 				"Local: \t\thttp://localhost:" + port + path + "/\n\t" +
 				"External: \thttp://" + ip + ":" + port + path + "/\n\t" +
 				"swagger-ui: \thttp://" + ip + ":" + port + path + "/swagger-ui.html\n\t" +

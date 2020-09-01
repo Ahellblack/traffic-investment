@@ -1,20 +1,18 @@
 package com.siti.system.login.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.siti.common.Result;
 import com.siti.common.vo.SysUserCacheInfo;
 import com.siti.system.login.entity.SysUser;
-
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.siti.system.login.model.SysUserSysDepartModel;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -135,8 +133,16 @@ public interface ISysUserService extends IService<SysUser> {
 	 * 根据角色Id查询
 	 * @param
 	 * @return
-	 */
+	 *//*
 	public IPage<SysUser> getUserByRoleId(Page<SysUser> page, String roleId, String username);
+*/
+	/**
+	 * 根据角色Id查询
+	 * @param
+	 * @return
+	 */
+	public List<SysUser> getUserByRoleId( String roleId, String username);
+
 
 	/**
 	 * 通过用户名获取用户角色集合

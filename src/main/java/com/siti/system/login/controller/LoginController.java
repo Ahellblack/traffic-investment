@@ -457,4 +457,40 @@ public class LoginController {
         return result;
     }
 
+
+    /**
+     * 用户信息
+     *
+     * @return
+     */
+    @ApiOperation("用户信息")
+    @GetMapping("/userInfo")
+    private Result<JSONObject> getUserInfo() {
+        LoginUser sysUser = (LoginUser) SecurityUtils.getSubject().getPrincipal();
+        Result<JSONObject> result = new Result<>();
+        List<Role> roles = roleMapper.getByUserId(sysUser.getId());
+        Set<Org> orgs = orgMapper.getByUserId(sysUser.getId());
+        List<Integer> roleIds = new ArrayList<Integer>();
+        for (Role role : roles) {
+            roleIds.add(role.getId());
+        }
+        List<Auth> menuList = new ArrayList<>();
+        List<Auth> authList = new ArrayList<>();
+        if (roleIds.size() > 0) {
+            menuList = authMapper.getMenu(roleIds);   //  获取角色的目录权限
+            authList = authMapper.getPermissionByRoleId(roleIds);    //  获取所有角色的所有授权信息
+        }
+        // 获取用户部门信息
+        JSONObject obj = new JSONObject();
+
+        obj.put("org", orgs);
+        obj.put("role", roles);
+        obj.put("menu", menuList);
+        obj.put("auth", authList);
+        result.setResult(obj);
+        result.success("获取信息成功");
+        return result;
+    }
+
+
 }
