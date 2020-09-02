@@ -68,11 +68,15 @@ public class InvestPlanServiceImpl extends ServiceImpl<InvestPlanMapper, Busines
                     Set<String> stringSet = Optional.ofNullable(map.get(DateUtils.formatDateYearMonth(initialTime)))
                             .orElse(new HashSet<>());
                     stringSet.add(name);
-                    map.put(DateUtils.formatDateYearMonth(initialTime), stringSet);
+                    String ym = DateUtils.formatDateYearMonth(initialTime);
+                    map.put(ym, stringSet);
                     //起始时间与结束时间年月不同
-                    if (DateUtils.getMonth(finalTime) != DateUtils.getMonth(initialTime)
-                            && DateUtils.getYear(finalTime) != DateUtils.getYear(initialTime)) {
+                    if (DateUtils.formatDateYearMonth(finalTime) != DateUtils.formatDateYearMonth(initialTime)
+                           ) {
                         stringSet = map.get(DateUtils.formatDateYearMonth(finalTime));
+                        if(stringSet==null){
+                            stringSet = new HashSet<>();
+                        }
                         stringSet.add(name);
                         map.put(DateUtils.formatDateYearMonth(finalTime), stringSet);
                     }

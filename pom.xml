@@ -243,6 +243,24 @@
             <version>1.0.3</version>
         </dependency>
 
+        <!-- AutoPoi Excel工具类-->
+        <dependency>
+            <groupId>org.jeecgframework</groupId>
+            <artifactId>autopoi-web</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.3.8</version>
+        </dependency>
 
     </dependencies>
     <!--	<build>

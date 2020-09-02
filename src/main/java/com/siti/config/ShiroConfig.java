@@ -69,6 +69,7 @@ public class ShiroConfig {
 
 		//cas验证登录
 		filterChainDefinitionMap.put("/cas/client/validateLogin", "anon");
+		filterChainDefinitionMap.put("/annualPlan/exportXls", "anon"); //TODO 测试用
 		// 配置不会被拦截的链接 顺序判断
 		filterChainDefinitionMap.put("/sys/getCheckCode", "anon"); //登录验证码接口排除
 		filterChainDefinitionMap.put("/sys/sendVeriCode/**", "anon"); //发送验证码
