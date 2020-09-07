@@ -5,7 +5,6 @@ import com.siti.common.AutoLog;
 import com.siti.common.EntityExcelView;
 import com.siti.common.Result;
 import com.siti.common.constant.CommonConstant;
-import com.siti.common.vo.LoginUser;
 import com.siti.construction.entity.BusinessInvestPlan;
 import com.siti.construction.service.IInvestPlanService;
 import com.siti.system.ctrl.LoginCtrl;
@@ -135,12 +134,13 @@ public class InvestPlanController {
     /**
      * 导出excel
      */
-    @RequestMapping(value = "/exportXls")
+    @RequestMapping(value
+            = "/exportXls")
     public ModelAndView exportXls(String year, String constructionCode, String type) {
-        LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
+        /*LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
         if(loginUserInfo==null){
             return null;
-        }
+        }*/
         QueryWrapper<BusinessInvestPlan> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("construction_code", constructionCode)
                 .orderByAsc("ym")
@@ -157,7 +157,7 @@ public class InvestPlanController {
         //导出文件名称
         mv.addObject(NormalExcelConstants.FILE_NAME, "年度资金计划");
         mv.addObject(NormalExcelConstants.CLASS, BusinessInvestPlan.class);
-        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("年度资金计划", "导出人:"+loginUserInfo.getRealname(), "导出信息"));
+        mv.addObject(NormalExcelConstants.PARAMS, new ExportParams("年度资金计划","", "导出信息"));
         mv.addObject(NormalExcelConstants.DATA_LIST, pageList);
         return mv;
     }

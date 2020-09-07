@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public interface ICommentService extends IService<CommentTopic> {
-    List<CommentTopicVo> allComment();
+    List<CommentTopicVo> allComment(String constructionCode,String type);
 
+    List<CommentTopicVo> allByMine(String constructionCode);
 }

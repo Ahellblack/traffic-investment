@@ -1,5 +1,6 @@
 package com.siti.workflow.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Workflow {
 
+  @TableId(value = "workflow_code")
   @ApiModelProperty(value = "主键,流程号")
   private String workflowCode;
   @ApiModelProperty(value = "流程名称")
@@ -30,5 +32,10 @@ public class Workflow {
   private String update_by;
   @ApiModelProperty(value = "类型 1前期 2工程")
   private int type;
+  @ApiModelProperty(value = "关联表名称")
+  private String relaTableName;
+  @ApiModelProperty(value = "流程简称")
+  private String abbreviation;
+
 
 }

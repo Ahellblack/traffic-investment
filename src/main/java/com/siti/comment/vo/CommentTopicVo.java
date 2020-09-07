@@ -1,5 +1,6 @@
 package com.siti.comment.vo;
 
+import com.siti.comment.entity.CommentItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,9 +21,8 @@ public class CommentTopicVo {
   private long fromUid;
   private Date createTime;
   private long toUid;
-  private Long pid;
-
-  private List<CommentTopicVo> subList;// 多级
+  private int hasRead;
+  private List<CommentItem> subList;// 多级
 
 
 

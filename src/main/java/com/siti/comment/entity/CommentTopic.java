@@ -19,8 +19,8 @@ public class CommentTopic {
   private long fromUid;
   private Date createTime;
   private long toUid;
-  private Long pid;
-
+  private String constructionCode;
+  private int hasRead;
 
 
 }
