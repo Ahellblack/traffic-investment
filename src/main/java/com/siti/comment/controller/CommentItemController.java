@@ -47,12 +47,13 @@ public class CommentItemController {
         LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
         if (commentItem.getTopicId() != null) {
             commentItem.setFromUid(loginUserInfo.getId());
-            commentItemService.save(commentItem);
+            // commentItemService.save(commentItem);
+            int i = commentItemService.getLastInsertId(commentItem);
+            if (i != 0) {
+                return Result.ok("添加主题成功！", commentItemService.getById(commentItem.getId()));
+            }
         }
-        if(commentItem.getId()!=0){
-            return Result.ok("添加主题成功！", commentItemService.getById(commentItem.getId()));
-        }
-        return Result.ok("添加评论成功！",commentItem);
+        return Result.ok("添加评论成功！", commentItem);
     }
 
     /**
@@ -86,7 +87,7 @@ public class CommentItemController {
     @ApiOperation(value = "详情", notes = "详情")
     public Result<?> getItem(Integer id) {
         CommentItem comment = commentItemService.getById(id);
-        if(comment.getHasRead()!=1) {
+        if (comment.getHasRead() != 1) {
             comment.setHasRead(1);
             boolean b = commentItemService.updateById(comment);
             if (b) {

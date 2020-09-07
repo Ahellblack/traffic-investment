@@ -29,11 +29,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentTopic>
     CommentItemMapper commentItemMapper;
 
     @Override
-    public List<CommentTopicVo> allComment(String constructionCode,String type) {
+    public List<CommentTopicVo> allComment(String constructionCode,String type, Integer hasRead) {
 
         LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
         if (loginUserInfo != null) {
-            List<CommentTopicVo> list = commentMapper.allComment(loginUserInfo.getId(),constructionCode,type);
+            List<CommentTopicVo> list = commentMapper.allComment(loginUserInfo.getId(),constructionCode,type,hasRead);
             list.forEach(data -> {
                 if ("ask".equals(data.getTopicType())) {
                     QueryWrapper<CommentItem> queryWrapper = new QueryWrapper();
@@ -49,6 +49,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentTopic>
         }
         return null;
     }
+
+    @Override
+    public List<CommentTopicVo> unread(String constructionCode, String type) {
+
+        LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
+        if (loginUserInfo != null) {
+            List<CommentTopicVo> list = commentMapper.unread(loginUserInfo.getId(),constructionCode,type,0);
+            return list;
+        }
+        return null;
+    }
+
 
     @Override
     public List<CommentTopicVo> allByMine(String constructionCode) {
@@ -69,6 +81,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentTopic>
             return list;
         }
         return null;
+    }
+
+    @Override
+    public int getLastInsertId(CommentTopic comment) {
+
+        return commentMapper.getLastInsertId(comment);
     }
 
 

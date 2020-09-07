@@ -6,6 +6,8 @@ import com.siti.comment.mapper.CommentItemMapper;
 import com.siti.comment.service.CommentItemService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +19,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommentItemServiceImpl extends ServiceImpl<CommentItemMapper, CommentItem> implements CommentItemService {
 
+    @Resource
+    CommentItemMapper commentItemMapper;
+
+    @Override
+    public int getLastInsertId(CommentItem commentItem) {
+
+        return commentItemMapper.getLastInsertId(commentItem);
+    }
 }

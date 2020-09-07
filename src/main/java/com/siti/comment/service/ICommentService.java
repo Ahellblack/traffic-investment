@@ -11,7 +11,11 @@ import java.util.List;
  */
 
 public interface ICommentService extends IService<CommentTopic> {
-    List<CommentTopicVo> allComment(String constructionCode,String type);
+    List<CommentTopicVo> allComment(String constructionCode,String type, Integer hasRead);
+
+    List<CommentTopicVo> unread(String constructionCode, String type);
 
     List<CommentTopicVo> allByMine(String constructionCode);
+
+    int getLastInsertId(CommentTopic comment);
 }

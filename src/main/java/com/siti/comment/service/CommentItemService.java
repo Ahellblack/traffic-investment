@@ -14,4 +14,5 @@ import com.siti.comment.entity.CommentItem;
  */
 public interface CommentItemService extends IService<CommentItem> {
 
+    int getLastInsertId(CommentItem commentItem);
 }
