@@ -29,7 +29,7 @@ public class BusinessTenderPlan extends Model<BusinessTenderPlan> {
      * 序号主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private long id;
 
     /**
      * 招标发起部门或者经办人

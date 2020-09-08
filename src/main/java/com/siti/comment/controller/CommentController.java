@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -176,16 +177,16 @@ public class CommentController {
      * @param ids
      * @return
      */
-    @GetMapping(value = "/batchDelete")
+    @PostMapping(value = "/batchDelete")
     @AutoLog(value = "批量删除评论（仅限本人发起）")
     @ApiOperation(value = "批量删除评论", notes = "批量删除评论")
-    public Result<?> batchDelete(List<Integer> ids) {
-
-        if(ids!=null && ids.size()!=0)
-            ids.forEach(id->{
-                delete(id);
+    public Result<?> batchDelete(String ids) {
+        List<String> idarray = Arrays.asList(ids.split(","));
+        if(ids!=null && idarray.size()!=0)
+            idarray.forEach(id->{
+                delete(Integer.parseInt(id));
             });
-        return Result.ok("批量删除异常 检查参数！");
+        return Result.ok("批量删除完成！");
     }
 
     /**
@@ -194,13 +195,14 @@ public class CommentController {
      * @param ids
      * @return
      */
-    @GetMapping(value = "/batchRead")
+    @PostMapping(value = "/batchRead")
     @AutoLog(value = "全部已读")
     @ApiOperation(value = "全部已读", notes = "全部已读")
-    public Result<?> batchRead(List<Integer> ids) {
+    public Result<?> batchRead( String ids) {
 
-        if(ids!=null && ids.size()!=0)
-            ids.forEach(id->{
+        List<String> idarray = Arrays.asList(ids.split(","));
+        if(ids!=null && idarray.size()!=0)
+            idarray.forEach(id->{
                 CommentTopic comment = icommentService.getById(id);
                 if (comment.getHasRead() != 1) {
                     comment.setHasRead(1);

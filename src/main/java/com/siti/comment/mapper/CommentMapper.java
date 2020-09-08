@@ -30,7 +30,7 @@ public interface CommentMapper extends BaseMapper<CommentTopic> {
             @Param("type") String type,@Param("hasRead")Integer hasRead);
 
     @Select("<script>SELECT " +
-            " id,topic_type,content,create_time,to_uid,from_uid ,0,has_read " +
+            " id,topic_type,content,create_time,to_uid,from_uid ,topic_id,has_read " +
             " FROM " +
             " `comment_topic` ct  " +
             "WHERE " +
@@ -42,7 +42,7 @@ public interface CommentMapper extends BaseMapper<CommentTopic> {
             " UNION " +
             " select id,\"ask\",content,create_time ,to_uid,from_uid ,topic_id,has_read " +
             " from comment_item WHERE has_read = #{hasRead} " +
-            " and  topic_id in (select id from `comment_topic` where to_uid = #{userId}) " +
+            " and ( topic_id in (select id from `comment_topic` where to_uid = #{userId}) or to_uid = #{userId} )" +
             " <if test = \' type!= null \'> and #{type} = \"ask\" </if> " +
             " order by create_time desc " +
             "</script>")

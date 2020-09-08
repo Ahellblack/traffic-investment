@@ -16,6 +16,7 @@ import java.util.List;
 public class CommentTopicVo {
 
   private long id;
+  private int topicId;
   private String topicType;
   private String content;
   private long fromUid;

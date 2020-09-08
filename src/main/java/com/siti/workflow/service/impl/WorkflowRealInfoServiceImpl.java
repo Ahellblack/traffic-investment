@@ -66,12 +66,12 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                             break;
                         }
                         Date finaldate = DateUtils.str2Date2(finalTime);
-                        if (finaldate.after(new Date()) ) {
+                        if (finaldate.before(new Date()) ) {
                             // 未完成节点若时间超过当前时间 设置为逾期 #TODO 状态的判断
                             if(tmap.get(finaldate)==null){
                                 realinfo.setStatus(3);
                                 break;
-                            }else if(DateUtils.str2Date2(tmap.get(finaldate)).after(new Date()) ) {
+                            }else if(DateUtils.str2Date2(tmap.get(finaldate)).after(finaldate) ) {
                                 realinfo.setStatus(3);
                                 break;
                             }

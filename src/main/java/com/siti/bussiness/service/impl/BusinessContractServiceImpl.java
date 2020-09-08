@@ -6,6 +6,8 @@ import com.siti.bussiness.mapper.BusinessContractMapper;
 import com.siti.bussiness.service.BusinessContractService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class BusinessContractServiceImpl extends ServiceImpl<BusinessContractMapper, BusinessContract> implements BusinessContractService {
 
+
+    @Resource
+    BusinessContractMapper businessContractMapper;
+
+    public void insert(BusinessContract businessContract){
+        businessContractMapper.insert(businessContract);
+    }
 }

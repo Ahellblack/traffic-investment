@@ -29,7 +29,7 @@ public class BusinessTenderChoose extends Model<BusinessTenderChoose> {
      * 主键id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private long id;
 
     /**
      * 招标发起部门

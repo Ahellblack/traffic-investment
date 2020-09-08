@@ -25,8 +25,9 @@ public class WorkflowReal {
     private String updateTime;
     private Integer updateBy;
     private String constructionCode;
-    private String constructionName;
     private String status;
     @ApiModelProperty(value = "类型 1前期 2工程")
     private int type;
+    private String relaTableName;
+    private long relevanceId;
 }

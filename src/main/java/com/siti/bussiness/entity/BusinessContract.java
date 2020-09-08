@@ -23,7 +23,7 @@ public class BusinessContract extends Model<BusinessContract> {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer id;
+    private long id;
 
     /**
      * 合同名称
