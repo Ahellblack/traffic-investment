@@ -1,11 +1,13 @@
 package com.siti.workflow.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.siti.common.vo.LoginUser;
 import com.siti.construction.entity.BusinessConstruction;
 import com.siti.construction.service.IConstructionService;
 import com.siti.utils.DateUtils;
 import com.siti.workflow.entity.Workflow;
+import com.siti.workflow.entity.WorkflowReal;
 import com.siti.workflow.entity.WorkflowRealInfo;
 import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import com.siti.workflow.mapper.WorkflowNodeMapper;
@@ -208,14 +210,21 @@ public class WorkflowRealInfoServiceImpl extends ServiceImpl<WorkflowRealInfoMap
                 BusinessConstruction construction = iConstructionService.getById(constructionCode);
                /* UpdateWrapper<BusinessConstruction> wrapper = new UpdateWrapper();
                 wrapper.set("construction_code",constructionCode);*/
+                QueryWrapper<WorkflowReal> iwflqueryWrapper = new QueryWrapper();
+                iwflqueryWrapper.eq("construction_code",constructionCode);
+                WorkflowReal one = iWorkflowRealService.getOne(iwflqueryWrapper);
                 if (a) {
                     construction.setStatus(2);
+                    one.setStatus(2);
                 } else if (b) {
                     construction.setStatus(0);
+                    one.setStatus(0);
                 } else {
                     construction.setStatus(1);
+                    one.setStatus(1);
                 }
                 iConstructionService.updateById(construction);
+                iWorkflowRealService.updateById(one);
 
             } catch (Exception e) {
                 e.printStackTrace();

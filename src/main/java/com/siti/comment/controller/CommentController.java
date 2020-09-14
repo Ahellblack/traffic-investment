@@ -138,7 +138,7 @@ public class CommentController {
 
         LoginUser loginUserInfo = loginCtrl.getLoginUserInfo();
         CommentTopic item = icommentService.getById(id);
-        if (item.getTopicType() == null || !"ask".equals(item.getTopicType())) {
+        if (item.getTopicType() == null /*|| !"ask".equals(item.getTopicType())*/) {
             return Result.ok("无权限删除该记录");
         }
         if (item.getFromUid() == loginUserInfo.getId()) {
