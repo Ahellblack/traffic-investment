@@ -53,10 +53,13 @@ public class ConstructionController {
      */
     @ApiOperation(value = "获取项目数据列表", notes = "获取项目数据列表")
     @GetMapping(value = "/list")
-    public Result<?> list(Integer status, String year, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+    public Result<?> list(Integer status, String year,String constructionName, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                           HttpServletRequest req) {
         QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByAsc("construction_code");
+        if(constructionName!=null){
+            queryWrapper.like("construction_name", constructionName);
+        }
         if (status != null) {
             queryWrapper.eq("status", status);
         }

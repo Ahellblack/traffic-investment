@@ -82,7 +82,7 @@ public class InvestPlanServiceImpl extends ServiceImpl<InvestPlanMapper, Busines
                     }
                 }
             });
-            //生成中间月份 #TODO 把日月的格式修改为YYYY-MM
+            //生成中间月份 #TODO 是否删除多余的月份。
             List<String> list = innerYearMonth(construction.getInitialTime(),construction.getFinalTime());
             list.removeAll(map.keySet());
             list.forEach(ym -> {

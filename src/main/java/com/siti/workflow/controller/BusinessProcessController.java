@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.siti.bussiness.entity.*;
 import com.siti.common.BussiEntityConfig;
+import com.siti.common.Result;
 import com.siti.common.vo.LoginUser;
 import com.siti.system.ctrl.LoginCtrl;
 import com.siti.utils.DateUtils;
@@ -17,6 +18,10 @@ import com.siti.workflow.service.IWorkflowNodeService;
 import com.siti.workflow.service.IWorkflowRealInfoService;
 import com.siti.workflow.service.IWorkflowRealService;
 import com.siti.workflow.service.IWorkflowService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +35,13 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 12293 on 2020/8/18.
  */
 @RestController
+@Api(tags = "业务审批")
 @RequestMapping("business/process")
 public class BusinessProcessController {
 
@@ -51,9 +58,14 @@ public class BusinessProcessController {
 
     /**
      * 流程初始化
+     *
+     * @param workflowCode
+     * @param t            object -> jsonObject -> json
      */
+    @ApiOperation(value = "业务审批，流程初始化", notes = "业务审批，流程初始化")
     @PostMapping("init")
-    public void initBusiProcess(String workflowCode, @RequestBody Object t) {
+    public Result<?> initBusiProcess(String workflowCode, @RequestBody Object t) {
+        Logger logger = LoggerFactory.getLogger(BusinessProcessController.class);
         LoginUser user = loginCtrl.getLoginUserInfo();
         Workflow workflow = iWorkflowService.getById(workflowCode);
         if (workflow != null) {
@@ -124,24 +136,53 @@ public class BusinessProcessController {
 
                 //TODO 配置数据库业务表节点
                 QueryWrapper<WorkflowNode> wrapper = new QueryWrapper();
-                wrapper.eq("workflow_code",workflowReal.getWorkflowCode()).orderByAsc("sort");
-                WorkflowNode workflowNode = iWorkflowNodeService.getOne(wrapper);
+                wrapper.eq("workflow_code", workflowReal.getWorkflowCode()).orderByAsc("sort");
+                //换成if
+                WorkflowNode workflowNode = iWorkflowNodeService.list(wrapper).isEmpty() ? null : iWorkflowNodeService.list(wrapper).get(0);
                 WorkflowRealInfo workflowRealInfo = new WorkflowRealInfo();
-                BeanUtils.copyProperties(workflowNode,workflowRealInfo);
-                workflowRealInfo.setSheetCode(sheetCode);workflowRealInfo.setInsideTime(DateUtils.date2Str2(new Date()));
+                BeanUtils.copyProperties(workflowNode, workflowRealInfo);
+                workflowRealInfo.setSheetCode(sheetCode);
+                workflowRealInfo.setInsideTime(DateUtils.date2Str2(new Date()));
                 workflowRealInfo.setApprovalUserId(user.getId());
                 workflowRealInfo.setApprovalUserName(user.getRealname());
                 iWorkflowRealInfoService.save(workflowRealInfo);
 
-
-
+                return Result.ok("生成流程成功", workflowReal);
             } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                e.printStackTrace();
-                //return GlobalResult.resOk("个性化表单数据插入失败");
-
+                logger.error("生成" + relaTableName + "流程异常", e);
+                return Result.ok("检查后台表配置代码。");
+            } catch (Exception e) {
+                logger.error("生成" + relaTableName + "流程异常", e);
+                return Result.ok(relaTableName + " 单号生成异常，检查接口");
             }
         }
-        //if(workflow)
+        return Result.ok("流程单号生成异常。");
+    }
+
+    /**
+     * 查询登录用户发起及待审批表单
+     *
+     * @param workflowCode
+     */
+    @ApiOperation(value = "业务审批,查询登录用户发起及待审批表单", notes = "业务审批,查询登录用户发起及待审批表单")
+    @PostMapping("busiFlowReal")
+    public Result<?> getBusinessWorkflowReal(String workflowCode) {
+
+        List<WorkflowReal> list = iWorkflowRealService.getBusinessWorkflowReal(workflowCode);
+        return null;
+    }
+
+
+    /**
+     * 查询当前审批状态
+     *
+     * @param workflowCode
+     * @param t            object -> jsonObject -> json
+     */
+    @ApiOperation(value = "业务审批,查询当前审批状态", notes = "业务审批,查询当前审批状态")
+    @PostMapping("busiFlowRealInfo")
+    public Result<?> getBusinessWorkflowRealInfo(String workflowCode, @RequestBody Object t) {
+        return null;
     }
 
 

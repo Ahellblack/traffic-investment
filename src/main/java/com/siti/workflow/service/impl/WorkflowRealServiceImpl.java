@@ -7,6 +7,7 @@ import com.siti.workflow.service.IWorkflowRealService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by Solarie on 2020/6/18.
@@ -22,4 +23,10 @@ public class WorkflowRealServiceImpl extends ServiceImpl<WorkflowRealMapper, Wor
         return workflowRealMapper.insert(var1);
     }
 
+    @Override
+    public List<WorkflowReal> getBusinessWorkflowReal(String workflowCode) {
+        List<WorkflowReal> list = workflowRealMapper.getBusinessWorkflowReal(workflowCode);
+
+        return null;
+    }
 }

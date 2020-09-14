@@ -16,8 +16,6 @@ public class WorkflowNode {
   private String nodeCode;
   @ApiModelProperty(value = "流程号")
   private String workflowCode;
-  @ApiModelProperty(value = "结点名称")
-  private String workflowNodeCode;
   @ApiModelProperty(value = "节点等级")
   private String nodeLevel;
   @ApiModelProperty(value = "父级节点")
@@ -34,7 +32,7 @@ public class WorkflowNode {
   private long approvalMethod;
   @ApiModelProperty(value = "关联表")
   private String relatTable;
-  @ApiModelProperty(value = "进入节点时间")
+ /* @ApiModelProperty(value = "进入节点时间")
   private String insideTime;
   @ApiModelProperty(value = "配置的初始时间")
   private String initialTime;
@@ -42,7 +40,7 @@ public class WorkflowNode {
   private String finalTime;
   @ApiModelProperty(value = "实际完成时间")
   private String finishTime;
-
+*/
 
 
 

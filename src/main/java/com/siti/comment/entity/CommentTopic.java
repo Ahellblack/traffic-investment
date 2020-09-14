@@ -14,6 +14,7 @@ import java.util.Date;
 public class CommentTopic {
 
   private long id;
+  private long topicId;
   private String topicType;
   private String content;
   private long fromUid;
