@@ -10,6 +10,9 @@ import com.siti.workflow.entity.WorkflowReal;
 import com.siti.workflow.entity.WorkflowRealTaskProgress;
 import com.siti.workflow.service.IWorkflowRealService;
 import com.siti.workflow.service.IWorkflowRealTaskProgressService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 /**
  * Created by 12293 on 2020/9/14.
  */
+@RestController
+@RequestMapping("task")
 public class CreateMsgTask {
 
     @Resource
@@ -30,6 +35,7 @@ public class CreateMsgTask {
     @Resource
     IConstructionService iConstructionService;
 
+    @GetMapping("createMsg")
     public void createRemindMsg() {
         // #TODO 发送次数限制
         QueryWrapper queryWrapper = new QueryWrapper();
@@ -46,7 +52,9 @@ public class CreateMsgTask {
                         .collect(Collectors.toList());
                 for (WorkflowRealTaskProgress rtask : alltask) {
 
-                    if (DateUtils.str2Date2(rtask.getFinalTime()).after(new Date())) {
+                    long timeDiff = new Date().getTime() - DateUtils.str2Date2(rtask.getFinalTime()).getTime();
+
+                    if (DateUtils.str2Date2(rtask.getFinalTime()).before(new Date())) {
                         BusinessConstruction construction = iConstructionService.getById(rtask.getConstructionCode());
                         String content = new StringBuilder("您的").append(construction.getConstructionName()).append("项目中,")
                                 .append(rtask.getTaskName()).append(" 任务已逾期，请尽快处理").toString();
@@ -61,7 +69,7 @@ public class CreateMsgTask {
                                 .constructionCode(rtask.getConstructionCode())
                                 .hasRead(0).content(content).toUid(uid).fromUid(1).build();
                         iCommentService.save(commentTopic);
-                    } else if (new Date().getTime() - DateUtils.str2Date2(rtask.getFinalTime()).getTime() < 3 * 24 * 60 * 60 * 1000) {
+                    } else if (timeDiff <  0 && -timeDiff < 3 * 24 * 60 * 60 * 1000) {
 
                         BusinessConstruction construction = iConstructionService.getById(rtask.getConstructionCode());
                         String content = new StringBuilder("您的").append(construction.getConstructionName()).append("项目中,")
@@ -82,7 +90,7 @@ public class CreateMsgTask {
                 }
 
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

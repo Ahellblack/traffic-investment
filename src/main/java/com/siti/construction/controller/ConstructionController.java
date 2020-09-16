@@ -12,7 +12,6 @@ import com.siti.construction.service.IConstructionService;
 import com.siti.system.ctrl.LoginCtrl;
 import com.siti.system.login.entity.SysUser;
 import com.siti.system.login.service.ISysUserService;
-import com.siti.utils.DateUtils;
 import com.siti.workflow.service.IWorkflowNodeService;
 import com.siti.workflow.vo.WorkflowNodeVo;
 import io.swagger.annotations.Api;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -56,7 +54,7 @@ public class ConstructionController {
     public Result<?> list(Integer status, String year,String constructionName, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
                           HttpServletRequest req) {
         QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByAsc("construction_code");
+        queryWrapper.orderByDesc("initial_time");
         if(constructionName!=null){
             queryWrapper.like("construction_name", constructionName);
         }
@@ -89,9 +87,9 @@ public class ConstructionController {
         QueryWrapper<BusinessConstruction> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("construction_code", constructionCode);
         BusinessConstruction construction = iConstructionService.getOne(queryWrapper);
-        construction.setStartTime(construction.getInitialTime());
+       /* construction.setStartTime(construction.getInitialTime());
         construction.setEndTime( (new Date().before(DateUtils.str2Date2(construction.getFinalTime())))? construction.getFinalTime(): DateUtils.date2Str2(new Date()));
-        return Result.ok(construction);
+        */return Result.ok(construction);
     }
 
 

@@ -23,6 +23,7 @@ public class CommentTopicVo {
   private Date createTime;
   private long toUid;
   private int hasRead;
+  private String constructionCode;
   private List<CommentItem> subList;// 多级
 
 

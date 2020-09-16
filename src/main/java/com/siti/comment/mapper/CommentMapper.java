@@ -30,7 +30,7 @@ public interface CommentMapper extends BaseMapper<CommentTopic> {
             @Param("type") String type,@Param("hasRead")Integer hasRead);
 
     @Select("<script>SELECT " +
-            " id,topic_type,content,create_time,to_uid,from_uid ,topic_id,has_read " +
+            " id,topic_type,content,create_time,to_uid,from_uid ,topic_id,has_read,construction_code " +
             " FROM " +
             " `comment_topic` ct  " +
             "WHERE " +
@@ -40,7 +40,7 @@ public interface CommentMapper extends BaseMapper<CommentTopic> {
             " <if test = \' type!= null \'>AND if(#{type} = \"remind\", topic_type in(\"near\",\"over\") , topic_type = #{type})</if>" +
             " <if test = \' hasRead!= null \'>AND has_read = #{hasRead} </if>" +
             " UNION " +
-            " select id,\"ask\",content,create_time ,to_uid,from_uid ,topic_id,has_read " +
+            " select id,\"ask\",content,create_time ,to_uid,from_uid ,topic_id,has_read, \"\"  "+
             " from comment_item WHERE has_read = #{hasRead} " +
             " and ( topic_id in (select id from `comment_topic` where to_uid = #{userId}) or to_uid = #{userId} )" +
             " <if test = \' type!= null \'> and #{type} = \"ask\" </if> " +
